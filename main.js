@@ -12,7 +12,7 @@ const animateScript = () => {
 };
 
 const moveRight = () => {
-    right += 50;
+    right += 25;
     hero.style.transform = `translateX(${right}px)`;
     window.requestAnimationFrame(animateScript);
     console.log("right");
@@ -20,7 +20,7 @@ const moveRight = () => {
 };
 
 const moveLeft = () => {
-    right -= 50;
+    right -= 25;
     hero.style.transform = `translateX(${right}px)`;
     window.requestAnimationFrame(animateScript);
     console.log("left");
@@ -30,7 +30,7 @@ const moveLeft = () => {
 const moveJump = () => {
     if (jumpCount < 3){
 
-        jump -= 50;
+        jump -= 100;
         //if (isJumping) return;
         //hero.style.transform = `translateX(${right}px)`;
         hero.style.transform = `translate(${right}px,${jump}px)`;
@@ -47,7 +47,7 @@ const moveJump = () => {
 };
 
 const control = (e) => {
-    if (position < 500) {
+    if (position < 250) {
         position = position + 99.9;
     } else {
         position = 99.9;
