@@ -1,17 +1,18 @@
 #mario {
-    position: absolute;
-    left: 0px;
-    bottom: 0px;   
-    height: 175px;
-    width: 91px;background:
-  url('https://s3.amazonaws.com/media-p.slid.es/uploads/55786/images/1828075/mario-jump.png') 0px 0px;
-  }
+  position: absolute;
+  left: 0px;
+  bottom: 0px;   
+  height: 175px;
+  width: 91px;background:
+url('https://s3.amazonaws.com/media-p.slid.es/uploads/55786/images/1828075/mario-jump.png') 0px 0px;
+}
 
-  #game {
-    width: 1300px;
-    height: 700px;
-    border: 1px solid skyblue;
-    position: relative;
-    left: 60px;
-    background-color: darkseagreen;
-  }
+#game {
+  width: 1300px;
+  height: 700px;
+  border: 1px solid skyblue;
+  position: relative;
+  left: 60px;
+  background-image: url('/img/WallpaperDog-20403180.png');
+  background-size: 1300px;
+ }
