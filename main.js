@@ -4,30 +4,34 @@ let jump = 0;
 let gravity = 0.9;
 let hero = document.getElementById("mario");
 
+let isJumping = false;
+let jumpCount = 0;
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 };
 
 const moveRight = () => {
-    hero.style.transform = `translateX(${right}px)`;
     right += 50;
+    hero.style.transform = `translateX(${right}px)`;
     window.requestAnimationFrame(animateScript);
     console.log("right");
     console.log(hero.offsetTop);
 };
 
 const moveLeft = () => {
-    hero.style.transform = `translateX(${right}px)`;
     right -= 50;
+    hero.style.transform = `translateX(${right}px)`;
     window.requestAnimationFrame(animateScript);
     console.log("left");
     console.log(hero.offsetTop);
 };
 
 const moveJump = () => {
+    jump -= 50;
+    //if (isJumping) return;
     //hero.style.transform = `translateX(${right}px)`;
     hero.style.transform = `translate(${right}px,${jump}px)`;
-    jump -= 50;
+    isJumping = true;
     jump = jump * gravity;
     window.requestAnimationFrame(animateScript);
     console.log("jump");
@@ -42,6 +46,7 @@ const control = (e) => {
     }
     if (e.key === " ") {
         moveJump();
+        jumpCount++;
     } else if (e.key === "ArrowLeft") {
         moveLeft();
     } else if (e.key === "ArrowRight") {
