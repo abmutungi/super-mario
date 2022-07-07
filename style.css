@@ -1,7 +1,7 @@
 #mario {
   position: absolute;
   left: 0px;
-  bottom: 0px;   
+  bottom: 45px;   
   height: 88px;
   width: 45.5px;background:
 url('img/mario-jump.png') 0px 0px;
