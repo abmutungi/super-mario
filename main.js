@@ -34,9 +34,12 @@ const moveJump = () => {
         //hero.style.transform = `translateX(${right}px)`;
         hero.style.transform = `translate(${right}px,${jump}px)`;
         isJumping = true;
-        jump = jump * gravity;
+        // jump = jump * gravity;
         window.requestAnimationFrame(animateScript);
         console.log("jump");
+        if (hero.style.top < 575){
+            hero.style.transform = `translate(${right}px, 0px)`
+        }
         //console.log(hero.offsetTop);
     } else {
         jump = 0;
