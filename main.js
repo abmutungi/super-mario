@@ -4,6 +4,7 @@ let jump = 0;
 let bottom = 0;
 let gravity = 0.9;
 let hero = document.getElementById("mario");
+let gameDimensions = game.getBoundingClientRect();
 
 let game = document.getElementById("game");
 console.log(hero.getBoundingClientRect());
