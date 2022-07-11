@@ -11,9 +11,9 @@ let starttime;
 
 let isJumping = false;
 let jumpCount = 0;
-const animateScript = () => {
+const animateScript = (timestamp) => {
     hero.style.backgroundPosition = `-${position}px 0px`;
-    requestAnimationFrame(animateScript)
+    // requestAnimationFrame(animateScript)
 };
 
 const moveRight = () => {
@@ -25,6 +25,7 @@ const moveRight = () => {
    
       console.log("right");
       console.log(hero.offsetTop);
+      gameObject.right = false;
   }else{
     hero.style.left -= 50+ 'px'
   }
@@ -41,12 +42,14 @@ const moveLeft = () => {
        
         console.log("left");
         console.log(hero.offsetTop);
+        gameObject.left = false
     }else{
         hero.style.left += 50 + 'px'
     }
 };
 
-const moveJump = () => {
+const moveJump = (timestamp) => {
+    console.log(timestamp);
 if (hero.getBoundingClientRect().bottom < 649 && jumpCount < 3){
 
     // if (jumpCount < 3){
@@ -60,27 +63,36 @@ if (hero.getBoundingClientRect().bottom < 649 && jumpCount < 3){
         console.log("jump");
         
         console.log(hero.offsetTop);
+        gameObject.jump = false;
     }else{
 
         jump = 0;
         jumpCount = 0;
        // isJumping = false
         hero.style.transform = `translate(${right}px, ${jump}px)`;
+        gameObject.jump = false;
     }
 
 
-setTimeout(function(){
+ //setTimeout(function(){
 
-    if (isJumping){
-       while (hero.getBoundingClientRect().bottom <648 ){
-        isJumping = false
-        jump *= gravity
-        hero.style.transform = `translate(${right}px,${jump}px)`;
+    // if (isJumping){
+    //    while (hero.getBoundingClientRect().bottom <648 ){
+    //     isJumping = false
+    //     jump *= gravity
+    //     hero.style.transform = `translate(${right}px,${jump}px)`;
     
-       }
-    }
-}, 580)
+    //    }
+    // }
+//}, 780)
 };
+
+let gameObject = {
+    "jump": false,
+    "right": false,
+    "left": false,
+    "animate": true,
+}
 
 const control = (e) => {
     if (position < 250) {
@@ -89,17 +101,49 @@ const control = (e) => {
         position = 99.9;
     }
     if (e.key === " " ) {
-        jumpCount++;      
-        moveJump();    
+        jumpCount++; 
+        //moveJump()     
+        gameObject.jump = true;  
+        console.log(gameObject.true);  
     } else if (e.key === "ArrowLeft") {
-        moveLeft();
+        //moveLeft();
+        gameObject.left = true;
     } else if (e.key === "ArrowRight") {       
-        moveRight();
+        //moveRight();
+        gameObject.right = true;
     }
 };
-requestAnimationFrame(animateScript)
+// requestAnimationFrame(function(){
+//     console.log('checking fps .now', performance.now());
+//     console.log(timestamp);
+//     animateScript()
+// })
 document.addEventListener("keydown", function(e){
     control(e)
 });
+const gameLoop = () => {
+    hero.style.backgroundPosition = `-${position}px 0px`;
+    
+    if (gameObject.jump){
+
+        moveJump()
+
+    }
+
+    if (gameObject.right){
+        moveRight()
+    }
+
+    if (gameObject.left){
+        moveLeft()
+    }
+
+    if (gameObject.animate){
+        animateScript()
+    }
+    requestAnimationFrame(gameLoop)
+}
+
+requestAnimationFrame(gameLoop)
 
 //
