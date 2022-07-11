@@ -1,4 +1,9 @@
 let position = 99.9;
+let finalPosition = 100;
+let time = {
+    start: null,
+    total: 500,
+};
 let right = 100;
 let jump = 0;
 let bottom = 0;
@@ -49,41 +54,41 @@ const moveLeft = () => {
     }
 };
 
-const moveJump = (timestamp) => {
-    console.log(timestamp);
-    if (hero.getBoundingClientRect().bottom < 649 && jumpCount < 3) {
-        // if (jumpCount < 3){
+// const moveJump = (timestamp) => {
+//     console.log(timestamp);
+//     if (hero.getBoundingClientRect().bottom < 649 && jumpCount < 3) {
+//         // if (jumpCount < 3){
 
-        jump -= 100;
+//         jump -= 100;
 
-        hero.style.transform = `translate(${right}px,${jump}px)`;
-        isJumping = true;
-        console.log(hero.getBoundingClientRect());
-        isJumping = true;
-        console.log("jump");
+//         hero.style.transform = `translate(${right}px,${jump}px)`;
+//         isJumping = true;
+//         console.log(hero.getBoundingClientRect());
+//         isJumping = true;
+//         console.log("jump");
 
-        console.log(hero.offsetTop);
-        gameObject.jump = false;
-    } else {
-        jump = 0;
-        jumpCount = 0;
-        // isJumping = false
-        hero.style.transform = `translate(${right}px, ${jump}px)`;
-        gameObject.jump = false;
-    }
+//         console.log(hero.offsetTop);
+//         gameObject.jump = false;
+//     } else {
+//         jump = 0;
+//         jumpCount = 0;
+//         // isJumping = false
+//         hero.style.transform = `translate(${right}px, ${jump}px)`;
+//         gameObject.jump = false;
+//     }
 
-    //setTimeout(function(){
+//     //setTimeout(function(){
 
-    // if (isJumping){
-    //    while (hero.getBoundingClientRect().bottom <648 ){
-    //     isJumping = false
-    //     jump *= gravity
-    //     hero.style.transform = `translate(${right}px,${jump}px)`;
+//     // if (isJumping){
+//     //    while (hero.getBoundingClientRect().bottom <648 ){
+//     //     isJumping = false
+//     //     jump *= gravity
+//     //     hero.style.transform = `translate(${right}px,${jump}px)`;
 
-    //    }
-    // }
-    //}, 780)
-};
+//     //    }
+//     // }
+//     //}, 780)
+// };
 
 let gameObject = {
     jump: false,
@@ -92,6 +97,37 @@ let gameObject = {
     animate: true,
 };
 
+const moveup = (now) => {
+    if (!time.start) time.start = now;
+    time.elapsed = now - time.start;
+    let progress = time.elapsed / time.total;
+    let newPosition = progress * finalPosition;
+    hero.style.bottom = newPosition + 78 + "px";
+    if (progress < 1) {
+        requestAnimationFrame(moveup);
+    } else {
+        time.start = 0;
+        requestAnimationFrame(movedown);
+    }
+};
+
+const movedown = (now) => {
+    if (!time.start) time.start = now;
+    time.elapsed = now - time.start;
+    let progress = time.elapsed / time.total;
+    let newPosition = finalPosition * (1 - progress);
+    hero.style.bottom = newPosition + 78 + "px";
+    if (progress < 1) {
+        requestAnimationFrame(movedown);
+    } else {
+        time.start = 0;
+    }
+};
+
+function newJump() {
+    requestAnimationFrame(moveup);
+}
+
 const control = (e) => {
     if (position < 250) {
         position = position + 99.9;
@@ -99,7 +135,7 @@ const control = (e) => {
         position = 99.9;
     }
     if (e.key === " ") {
-        jumpCount++;
+        //jumpCount++;
         //moveJump()
         gameObject.jump = true;
         console.log(gameObject.true);
@@ -123,7 +159,8 @@ const gameLoop = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 
     if (gameObject.jump) {
-        moveJump();
+        newJump();
+        gameObject.jump = false;
     }
 
     if (gameObject.right) {
