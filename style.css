@@ -1,11 +1,12 @@
 #mario {
   position: absolute;
   left: 0px;
-  bottom: 45px;   
+  bottom: 78px;   
   height: 88px;
   width: 45.5px;background:
 url('img/mario-jump.png') 0px 0px;
 }
+
 
 #game {
   width: 1300px;
@@ -13,6 +14,25 @@ url('img/mario-jump.png') 0px 0px;
   border: 1px solid skyblue;
   position: relative;
   left: 60px;
-  background-image: url('/img/WallpaperDog-20403180.png');
   background-size: 1300px;
  }
+
+ .container {
+  overflow: hidden;
+}
+
+.sliding-background {
+  background: url('img/3739446 (1).jpg') repeat-x;
+  height: 700px;
+  width: 5076px;
+  animation: slide 60s linear infinite;
+}
+
+@keyframes slide{
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-1692px, 0, 0);
+  }
+}
