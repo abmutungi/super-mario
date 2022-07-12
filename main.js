@@ -61,33 +61,31 @@ let gameObject = {
 };
 
 const moveup = (now) => {
-    if (gameObject.jump){
+    if (gameObject.jump) {
+        //isJumping = true
 
-    
-    //isJumping = true
-
-    if (!time.start) time.start = now;
-    time.elapsed = now - time.start;
-    progress = time.elapsed / time.total;
-    newPosition = progress * finalPosition;
-    hero.style.bottom = newPosition + 78 + "px";
-    if (progress < 1) {
-        if (!done){
-
-            requestAnimationFrame(moveup);
-            done = false;
+        if (!time.start) time.start = now;
+        time.elapsed = now - time.start;
+        progress = time.elapsed / time.total;
+        newPosition = progress * finalPosition;
+        hero.style.bottom = newPosition + 78 + "px";
+        if (progress < 1) {
+            if (!done) {
+                requestAnimationFrame(moveup);
+                done = false;
+            }
+        } else {
+            time.start = 0;
+            gameObject.jump = false;
+            requestAnimationFrame(movedown);
+            done = true;
         }
-    } else {
-        time.start = 0;
-        gameObject.jump = false;
-        requestAnimationFrame(movedown);
-        done = true;
     }
-}
-
 };
 
 const movedown = (now) => {
+    gameObject.jump = false;
+
     if (!time.start) time.start = now;
     time.elapsed = now - time.start;
     progress = time.elapsed / time.total;
@@ -99,24 +97,11 @@ const movedown = (now) => {
         time.start = 0;
     }
     done = false;
-    
 };
 
 function newJump() {
     requestAnimationFrame(moveup);
 }
-
-const throttle = (func, wait) => {
-    let isWaiting = false;
-    return (...args) => {
-        if (isWaiting) return;
-        func(...args);
-        isWaiting = true;
-        setTimeout(() => {
-            isWaiting = false;
-        }, wait);
-    };
-};
 
 const control = (e) => {
     if (position < 250) {
