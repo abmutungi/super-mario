@@ -6,6 +6,7 @@ let time = {
     start: null,
     total: 500,
 };
+let done = false;
 let right = 100;
 let jump = 0;
 let bottom = 0;
@@ -29,7 +30,7 @@ const moveRight = () => {
         hero.style.transform = `translateX(${right}px)`;
 
         console.log("right");
-        console.log(hero.offsetTop);
+        console.log(hero.getBoundingClientRect().right);
         gameObject.right = false;
     } else {
         hero.style.left -= 50 + "px";
@@ -45,7 +46,7 @@ const moveLeft = () => {
         hero.style.transform = `translateX(${right}px) scaleX(-1)`;
 
         console.log("left");
-        console.log(hero.offsetTop);
+        console.log(hero.getBoundingClientRect().left);
         gameObject.left = false;
     } else {
         hero.style.left += 50 + "px";
@@ -60,17 +61,30 @@ let gameObject = {
 };
 
 const moveup = (now) => {
+    if (gameObject.jump){
+
+    
+    //isJumping = true
+
     if (!time.start) time.start = now;
     time.elapsed = now - time.start;
     progress = time.elapsed / time.total;
     newPosition = progress * finalPosition;
     hero.style.bottom = newPosition + 78 + "px";
     if (progress < 1) {
-        requestAnimationFrame(moveup);
+        if (!done){
+
+            requestAnimationFrame(moveup);
+            done = false;
+        }
     } else {
         time.start = 0;
+        gameObject.jump = false;
         requestAnimationFrame(movedown);
+        done = true;
     }
+}
+
 };
 
 const movedown = (now) => {
@@ -84,23 +98,25 @@ const movedown = (now) => {
     } else {
         time.start = 0;
     }
+    done = false;
+    
 };
 
 function newJump() {
     requestAnimationFrame(moveup);
 }
 
-// const throttle = (func, wait) => {
-//     let isWaiting = false;
-//     return (...args) => {
-//         if (isWaiting) return;
-//         func(...args);
-//         isWaiting = true;
-//         setTimeout(() => {
-//             isWaiting = false;
-//         }, wait);
-//     };
-// };
+const throttle = (func, wait) => {
+    let isWaiting = false;
+    return (...args) => {
+        if (isWaiting) return;
+        func(...args);
+        isWaiting = true;
+        setTimeout(() => {
+            isWaiting = false;
+        }, wait);
+    };
+};
 
 const control = (e) => {
     if (position < 250) {
@@ -124,8 +140,8 @@ const gameLoop = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 
     if (gameObject.jump) {
-        throttle(newJump(), 500);
-        gameObject.jump = false;
+        newJump();
+        // gameObject.jump = false;
     }
 
     if (gameObject.right) {
