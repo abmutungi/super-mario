@@ -1,3 +1,5 @@
+let progress = 0;
+let newPosition = 0;
 let position = 99.9;
 let finalPosition = 100;
 let time = {
@@ -10,8 +12,6 @@ let bottom = 0;
 let gravity = 0.9;
 let hero = document.getElementById("mario");
 let game = document.getElementById("game");
-let gameDimensions = game.getBoundingClientRect();
-
 console.log(hero.getBoundingClientRect());
 let starttime;
 
@@ -100,8 +100,8 @@ let gameObject = {
 const moveup = (now) => {
     if (!time.start) time.start = now;
     time.elapsed = now - time.start;
-    let progress = time.elapsed / time.total;
-    let newPosition = progress * finalPosition;
+    progress = time.elapsed / time.total;
+    newPosition = progress * finalPosition;
     hero.style.bottom = newPosition + 78 + "px";
     if (progress < 1) {
         requestAnimationFrame(moveup);
@@ -114,8 +114,8 @@ const moveup = (now) => {
 const movedown = (now) => {
     if (!time.start) time.start = now;
     time.elapsed = now - time.start;
-    let progress = time.elapsed / time.total;
-    let newPosition = finalPosition * (1 - progress);
+    progress = time.elapsed / time.total;
+    newPosition = finalPosition * (1 - progress);
     hero.style.bottom = newPosition + 78 + "px";
     if (progress < 1) {
         requestAnimationFrame(movedown);
