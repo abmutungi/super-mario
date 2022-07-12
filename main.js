@@ -12,6 +12,7 @@ let jump = 0;
 let bottom = 0;
 let gravity = 0.9;
 let hero = document.getElementById("mario");
+let enemy = document.getElementById("goomba");
 let game = document.getElementById("game");
 let starttime;
 let isJumping = false;

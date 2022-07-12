@@ -1,12 +1,20 @@
 #mario {
   position: absolute;
   left: 0px;
-  bottom: 78px;   
+  bottom: 95px;   
   height: 88px;
   width: 45.5px;background:
 url('img/mario-jump.png') 0px 0px;
 }
 
+#goomba {
+  position: absolute;
+  left: 900px;
+  bottom: 95px;   
+  height: 44px;
+  width: 45.5px;background:
+url('img/pngkey.com-goomba-png-1876196.png') 0px 0px;
+}
 
 #game {
   width: 1300px;
