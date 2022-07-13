@@ -20,6 +20,7 @@ let jumpCount = 0;
 let enemyCounter = 0;
 let enemyLeft = 0;
 let platform;
+let coin;
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 };
@@ -123,6 +124,18 @@ const createPlatform = () => {
     game.appendChild(platform);
 };
 
+const createPrizePlatform = () => {
+    prizePlatform = document.createElement("div");
+    prizePlatform.id = "prizeBrick";
+    prizePlatform.style.left = Math.random() * 1200 + "px";
+    game.appendChild(prizePlatform);
+};
+const createCoin = () => {
+    coin = document.createElement("div");
+    coin.setAttribute("id", "coin");
+    prizePlatform.appendChild(coin);
+};
+
 const moveEnemy = () => {
     enemyLeft -= 10;
 
@@ -158,6 +171,10 @@ document.addEventListener("keydown", function (e) {
     control(e);
 });
 createPlatform();
+createPrizePlatform();
+createCoin();
+
+console.log(platform.getBoundingClientRect());
 
 const gameLoop = () => {
     enemyCounter++;
