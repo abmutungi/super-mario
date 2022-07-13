@@ -12,11 +12,13 @@ let jump = 0;
 let bottom = 0;
 let gravity = 0.9;
 let hero = document.getElementById("mario");
-let enemy = document.getElementById("goomba");
+let enemy;
 let game = document.getElementById("game");
 let starttime;
 let isJumping = false;
 let jumpCount = 0;
+let enemyCounter = 0;
+let enemyLeft = 0;
 
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
@@ -59,6 +61,7 @@ let gameObject = {
     right: false,
     left: false,
     animate: true,
+    enemyExists: false
 };
 
 const moveup = (now) => {
@@ -104,6 +107,33 @@ function newJump() {
     requestAnimationFrame(moveup);
 }
 
+function createEnemy(){
+    enemy = document.createElement('div');
+    enemy.id = 'goomba';
+    game.appendChild(enemy);
+    enemyCounter = 0;
+    enemy.style.left = 1200 + 'px'
+    console.log("============== CREATING ENEMY =============");
+    gameObject.enemyExists = true
+    
+
+}
+
+
+function moveEnemy(){
+    enemyLeft -= 10;  
+
+        enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`
+   
+
+    if (enemy.getBoundingClientRect().left < game.getBoundingClientRect().left){
+        enemy.remove();
+        gameObject.enemyExists = false;
+    }
+    
+}
+
+
 const control = (e) => {
     if (position < 250) {
         position = position + 99.9;
@@ -123,6 +153,10 @@ document.addEventListener("keydown", function (e) {
     control(e);
 });
 const gameLoop = () => {
+    enemyCounter++
+    if (enemyCounter === 500){
+        createEnemy()
+    }
     hero.style.backgroundPosition = `-${position}px 0px`;
 
     if (gameObject.jump) {
@@ -140,6 +174,11 @@ const gameLoop = () => {
 
     if (gameObject.animate) {
         animateScript();
+    }
+
+    if (gameObject.enemyExists){
+        moveEnemy()
+        //gameObject.enemyExists = false;
     }
     requestAnimationFrame(gameLoop);
 };
