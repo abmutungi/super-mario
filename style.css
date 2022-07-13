@@ -30,7 +30,7 @@ url('img/pixilart-486741.png') 0px 0px;
   left: 400px;
   bottom: 295px;   
   height: 50px;
-  width: 150px;background:
+  width: 200px;background:
 url('img/Bricks.png') 0px 0px;
 }
 
@@ -39,8 +39,27 @@ url('img/Bricks.png') 0px 0px;
 
   bottom: 500px;
   height: 50px;
-  width: 270px;
+  width: 200px;
   background: url('img/Bricks.png') 0px 0px;
+}
+
+#greenPipe {
+background: url('img/uv-pipe-big-25992.png');
+position: absolute;
+left: 1200px;
+bottom: 60px;
+height: 85px;
+width: 85px;
+}
+
+#timer {
+  position: absolute;
+  left: 1000px;
+  bottom: 650px;
+  width: 200px;
+  height: 30px;
+  font-family: 'Press Start 2P', cursive;
+  color: azure;
 }
 
 #game {

@@ -21,9 +21,24 @@ let enemyCounter = 0;
 let enemyLeft = 0;
 let platform;
 let coin;
+let timer;
+let gameTime = 0;
+let pipe;
+
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 };
+
+const showTimer = () =>{
+timer = document.createElement("div")
+timer.id = 'timer'
+timer.textContent = gameTime;
+timer.innerHTML = gameTime;
+game.appendChild(timer);
+
+}
+
+showTimer();
 
 const moveRight = () => {
     if (
@@ -63,6 +78,7 @@ let gameObject = {
     left: false,
     animate: true,
     enemyExists: false,
+    pause: false,
 };
 
 const moveup = (now) => {
@@ -136,6 +152,12 @@ const createCoin = () => {
     prizePlatform.appendChild(coin);
 };
 
+const createPipe = () => {
+pipe = document.createElement("div");
+pipe.id = "greenPipe"
+game.appendChild(pipe)
+}
+
 const moveEnemy = () => {
     enemyLeft -= 10;
 
@@ -164,6 +186,14 @@ const control = (e) => {
         gameObject.left = true;
     } else if (e.key === "ArrowRight") {
         gameObject.right = true;
+    }else if (e.key === 'p' || e.key === 'P'){
+        console.log("CHECK IF PAUSE", e.key);
+        gameObject.pause = true;
+    }else if (e.key === 'c' || e.key === 'C'){
+        console.log("CHECK IF START", e.key);
+        gameObject.pause = false;
+        console.log(gameObject.pause);
+
     }
 };
 
@@ -176,35 +206,49 @@ createCoin();
 
 console.log(platform.getBoundingClientRect());
 
-const gameLoop = () => {
-    enemyCounter++;
-    if (enemyCounter === 500) {
-        createEnemy();
+const gameLoop = (timestamp) => {
+    if (!gameObject.pause){
+        gameTime = 20 - (timestamp/1000).toFixed(1);
+        timer.textContent = gameTime;
+        enemyCounter++;
+        if (enemyCounter === 500) {
+            createEnemy();
+        }
+        if (gameTime < 50  ){
+          timer.style.color = 'red';
+        }
+        if (gameTime === 50.00) createPipe();
+        hero.style.backgroundPosition = `-${position}px 0px`;
+    
+        if (gameObject.jump) {
+            newJump();
+        }
+    
+        if (gameObject.right) {
+            moveRight();
+        }
+    
+        if (gameObject.left) {
+            moveLeft();
+        }
+    
+        if (gameObject.animate) {
+            animateScript();
+        }
+    
+        if (gameObject.enemyExists) {
+            moveEnemy();
+            //gameObject.enemyExists = false;
+        }
+    
+        
     }
-    hero.style.backgroundPosition = `-${position}px 0px`;
+    if (gameTime > 0 ){
 
-    if (gameObject.jump) {
-        newJump();
-        // gameObject.jump = false;
+        requestAnimationFrame(gameLoop);
     }
-
-    if (gameObject.right) {
-        moveRight();
-    }
-
-    if (gameObject.left) {
-        moveLeft();
-    }
-
-    if (gameObject.animate) {
-        animateScript();
-    }
-
-    if (gameObject.enemyExists) {
-        moveEnemy();
-        //gameObject.enemyExists = false;
-    }
-    requestAnimationFrame(gameLoop);
+    
+    
 };
 
 requestAnimationFrame(gameLoop);
