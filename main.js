@@ -61,7 +61,7 @@ let gameObject = {
     right: false,
     left: false,
     animate: true,
-    enemyExists: false
+    enemyExists: false,
 };
 
 const moveup = (now) => {
@@ -72,7 +72,7 @@ const moveup = (now) => {
         time.elapsed = now - time.start;
         progress = time.elapsed / time.total;
         newPosition = progress * finalPosition;
-        hero.style.bottom = newPosition + 78 + "px";
+        hero.style.bottom = newPosition + 95 + "px";
         if (progress < 1) {
             if (!done) {
                 requestAnimationFrame(moveup);
@@ -94,7 +94,7 @@ const movedown = (now) => {
     time.elapsed = now - time.start;
     progress = time.elapsed / time.total;
     newPosition = finalPosition * (1 - progress);
-    hero.style.bottom = newPosition + 78 + "px";
+    hero.style.bottom = newPosition + 95 + "px";
     if (progress < 1) {
         requestAnimationFrame(movedown);
     } else {
@@ -103,36 +103,35 @@ const movedown = (now) => {
     done = false;
 };
 
-function newJump() {
+const newJump = () => {
     requestAnimationFrame(moveup);
-}
+};
 
-function createEnemy(){
-    enemy = document.createElement('div');
-    enemy.id = 'goomba';
-    game.appendChild(enemy);
+const createEnemy = () => {
+    enemy = document.createElement("div");
+    enemy.setAttribute("id", "goomba");
+    enemy.style.left = 1200 + "px";
     enemyCounter = 0;
-    enemy.style.left = 1200 + 'px'
     console.log("============== CREATING ENEMY =============");
-    gameObject.enemyExists = true
-    
+    game.appendChild(enemy);
+    gameObject.enemyExists = true;
+};
 
-}
+const moveEnemy = () => {
+    enemyLeft -= 10;
 
+    enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`;
 
-function moveEnemy(){
-    enemyLeft -= 10;  
-
-        enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`
-   
-
-    if (enemy.getBoundingClientRect().left < game.getBoundingClientRect().left){
+    if (
+        enemy.getBoundingClientRect().left <
+            game.getBoundingClientRect().left &&
+        gameObject.enemyExists
+    ) {
+        enemyLeft = 0;
         enemy.remove();
         gameObject.enemyExists = false;
     }
-    
-}
-
+};
 
 const control = (e) => {
     if (position < 250) {
@@ -140,7 +139,7 @@ const control = (e) => {
     } else {
         position = 99.9;
     }
-    if (e.key === " ") {
+    if (e.key === " " || e.key === "ArrowUp") {
         gameObject.jump = true;
     } else if (e.key === "ArrowLeft") {
         gameObject.left = true;
@@ -153,9 +152,9 @@ document.addEventListener("keydown", function (e) {
     control(e);
 });
 const gameLoop = () => {
-    enemyCounter++
-    if (enemyCounter === 500){
-        createEnemy()
+    enemyCounter++;
+    if (enemyCounter === 500) {
+        createEnemy();
     }
     hero.style.backgroundPosition = `-${position}px 0px`;
 
@@ -176,8 +175,8 @@ const gameLoop = () => {
         animateScript();
     }
 
-    if (gameObject.enemyExists){
-        moveEnemy()
+    if (gameObject.enemyExists) {
+        moveEnemy();
         //gameObject.enemyExists = false;
     }
     requestAnimationFrame(gameLoop);
