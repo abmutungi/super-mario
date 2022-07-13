@@ -24,19 +24,19 @@ let coin;
 let timer;
 let gameTime = 0;
 let pipe;
-
+let menu;
+let paused = true;
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 };
 
-const showTimer = () =>{
-timer = document.createElement("div")
-timer.id = 'timer'
-timer.textContent = gameTime;
-timer.innerHTML = gameTime;
-game.appendChild(timer);
-
-}
+const showTimer = () => {
+    timer = document.createElement("div");
+    timer.id = "timer";
+    timer.textContent = gameTime;
+    timer.innerHTML = gameTime;
+    game.appendChild(timer);
+};
 
 showTimer();
 
@@ -153,10 +153,19 @@ const createCoin = () => {
 };
 
 const createPipe = () => {
-pipe = document.createElement("div");
-pipe.id = "greenPipe"
-game.appendChild(pipe)
-}
+    pipe = document.createElement("div");
+    pipe.id = "greenPipe";
+    game.appendChild(pipe);
+};
+
+const pauseMenu = () => {
+    if (gameObject.pause) {
+        menu = document.createElement("div");
+        menu.id = "pauseMenu";
+        menu.textContent = "PRESS C TO CONTINUE\nPRESS R TO RESTART";
+        if (paused) game.appendChild(menu);
+    }
+};
 
 const moveEnemy = () => {
     enemyLeft -= 10;
@@ -186,14 +195,12 @@ const control = (e) => {
         gameObject.left = true;
     } else if (e.key === "ArrowRight") {
         gameObject.right = true;
-    }else if (e.key === 'p' || e.key === 'P'){
-        console.log("CHECK IF PAUSE", e.key);
+    } else if (e.key === "p" || e.key === "P") {
         gameObject.pause = true;
-    }else if (e.key === 'c' || e.key === 'C'){
-        console.log("CHECK IF START", e.key);
+    } else if (e.key === "c" || e.key === "C") {
         gameObject.pause = false;
+        paused = false;
         console.log(gameObject.pause);
-
     }
 };
 
@@ -203,52 +210,47 @@ document.addEventListener("keydown", function (e) {
 createPlatform();
 createPrizePlatform();
 createCoin();
-
+pauseMenu();
 console.log(platform.getBoundingClientRect());
 
 const gameLoop = (timestamp) => {
-    if (!gameObject.pause){
-        gameTime = 20 - (timestamp/1000).toFixed(1);
+    if (!gameObject.pause) {
+        gameTime = 20 - (timestamp / 1000).toFixed(1);
         timer.textContent = gameTime;
         enemyCounter++;
         if (enemyCounter === 500) {
             createEnemy();
         }
-        if (gameTime < 50  ){
-          timer.style.color = 'red';
+        if (gameTime < 50) {
+            timer.style.color = "red";
         }
-        if (gameTime === 50.00) createPipe();
+        if (gameTime === 50.0) createPipe();
         hero.style.backgroundPosition = `-${position}px 0px`;
-    
+
         if (gameObject.jump) {
             newJump();
         }
-    
+
         if (gameObject.right) {
             moveRight();
         }
-    
+
         if (gameObject.left) {
             moveLeft();
         }
-    
+
         if (gameObject.animate) {
             animateScript();
         }
-    
+
         if (gameObject.enemyExists) {
             moveEnemy();
             //gameObject.enemyExists = false;
         }
-    
-        
     }
-    if (gameTime > 0 ){
-
+    if (gameTime > 0) {
         requestAnimationFrame(gameLoop);
     }
-    
-    
 };
 
 requestAnimationFrame(gameLoop);

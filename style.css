@@ -62,6 +62,18 @@ width: 85px;
   color: azure;
 }
 
+#pauseMenu {
+  position: relative;
+  left: 500px;
+  bottom: 650px;
+  width: 800px;
+  height: 300px;
+  border: 2px solid black;
+  font-family: 'Press Start 2P', cursive;
+  color: azure;
+  background-color: black;
+}
+
 #game {
   width: 1300px;
   height: 700px;
