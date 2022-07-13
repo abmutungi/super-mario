@@ -64,14 +64,15 @@ width: 85px;
 
 #pauseMenu {
   position: relative;
-  left: 500px;
-  bottom: 650px;
+  left: 250px;
+  bottom: 550px;
   width: 800px;
-  height: 300px;
+  height: 400px;
   border: 2px solid black;
   font-family: 'Press Start 2P', cursive;
   color: azure;
   background-color: black;
+  white-space:pre;
 }
 
 #game {

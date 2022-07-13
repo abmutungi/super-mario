@@ -25,7 +25,7 @@ let timer;
 let gameTime = 0;
 let pipe;
 let menu;
-let paused = true;
+let paused = false;
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 };
@@ -79,6 +79,7 @@ let gameObject = {
     animate: true,
     enemyExists: false,
     pause: false,
+    restart: true,
 };
 
 const moveup = (now) => {
@@ -158,12 +159,22 @@ const createPipe = () => {
     game.appendChild(pipe);
 };
 
+const restart = (time) =>{
+    time = 0;
+    hero.style.left= 0 + 'px';
+    hero.style.bottom= 95 + 'px';
+
+}
+
 const pauseMenu = () => {
+    menu = document.createElement("div");
+    menu.id = "pauseMenu";
+    menu.textContent = `PRESS C TO CONTINUE \r\n\r\n\r\n PRESS R TO RESTART`;
     if (gameObject.pause) {
-        menu = document.createElement("div");
-        menu.id = "pauseMenu";
-        menu.textContent = "PRESS C TO CONTINUE\nPRESS R TO RESTART";
-        if (paused) game.appendChild(menu);
+        if (!paused){
+            game.appendChild(menu);
+            paused = true;
+        } 
     }
 };
 
@@ -198,10 +209,13 @@ const control = (e) => {
     } else if (e.key === "p" || e.key === "P") {
         gameObject.pause = true;
     } else if (e.key === "c" || e.key === "C") {
+        game.lastChild.remove();
         gameObject.pause = false;
-        paused = false;
-        console.log(gameObject.pause);
-    }
+        paused = false;  
+    } 
+    // else if (e.key === "r" || e.key === "R") {
+    //     gameObject.restart = true;
+    // }
 };
 
 document.addEventListener("keydown", function (e) {
@@ -214,9 +228,9 @@ pauseMenu();
 console.log(platform.getBoundingClientRect());
 
 const gameLoop = (timestamp) => {
-    if (!gameObject.pause) {
-        gameTime = 20 - (timestamp / 1000).toFixed(1);
-        timer.textContent = gameTime;
+    if (!gameObject.pause) {        
+        gameTime++
+        timer.textContent = 20 - ((gameTime/10)/10).toFixed(1);
         enemyCounter++;
         if (enemyCounter === 500) {
             createEnemy();
@@ -247,8 +261,11 @@ const gameLoop = (timestamp) => {
             moveEnemy();
             //gameObject.enemyExists = false;
         }
+    }else{
+        pauseMenu();
     }
-    if (gameTime > 0) {
+
+    if (20 - ((gameTime/10)/10).toFixed(1) > 0) {
         requestAnimationFrame(gameLoop);
     }
 };
