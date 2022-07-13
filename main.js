@@ -1,7 +1,7 @@
 let progress = 0;
 let newPosition = 0;
 let position = 99.9;
-let finalPosition = 100;
+let finalPosition = 300;
 let time = {
     start: null,
     total: 500,
@@ -19,7 +19,7 @@ let isJumping = false;
 let jumpCount = 0;
 let enemyCounter = 0;
 let enemyLeft = 0;
-
+let platform;
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
 };
@@ -117,6 +117,12 @@ const createEnemy = () => {
     gameObject.enemyExists = true;
 };
 
+const createPlatform = () => {
+    platform = document.createElement("div");
+    platform.setAttribute("id", "brick");
+    game.appendChild(platform);
+};
+
 const moveEnemy = () => {
     enemyLeft -= 10;
 
@@ -151,6 +157,8 @@ const control = (e) => {
 document.addEventListener("keydown", function (e) {
     control(e);
 });
+createPlatform();
+
 const gameLoop = () => {
     enemyCounter++;
     if (enemyCounter === 500) {

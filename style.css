@@ -16,6 +16,15 @@ url('img/mario-jump.png') 0px 0px;
 url('img/pngkey.com-goomba-png-1876196.png') 0px 0px;
 }
 
+#brick {
+  position: absolute;
+  left: 400px;
+  bottom: 295px;   
+  height: 50px;
+  width: 150px;background:
+url('img/Bricks.png') 0px 0px;
+}
+
 #game {
   width: 1300px;
   height: 700px;
