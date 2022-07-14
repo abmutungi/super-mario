@@ -54,6 +54,22 @@ const moveRight = () => {
     } else {
         hero.style.left -= 50 + "px";
     }
+
+    if (
+        hero.getBoundingClientRect().x <
+            platform.getBoundingClientRect().x +
+                platform.getBoundingClientRect().width &&
+        hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
+            platform.getBoundingClientRect().x &&
+        hero.getBoundingClientRect().y <
+            platform.getBoundingClientRect().y +
+                platform.getBoundingClientRect().height &&
+        hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
+            platform.getBoundingClientRect().y
+    ) {
+        console.log("r collision");
+        gameObject.onPlatform = true;
+    } 
 };
 
 const moveLeft = () => {
@@ -70,6 +86,22 @@ const moveLeft = () => {
     } else {
         hero.style.left += 50 + "px";
     }
+
+    if (
+        hero.getBoundingClientRect().x <
+            platform.getBoundingClientRect().x +
+                platform.getBoundingClientRect().width &&
+        hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
+            platform.getBoundingClientRect().x &&
+        hero.getBoundingClientRect().y <
+            platform.getBoundingClientRect().y +
+                platform.getBoundingClientRect().height &&
+        hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
+            platform.getBoundingClientRect().y
+    ) {
+        console.log("l collision");
+        gameObject.onPlatform = true;
+    }
 };
 
 let gameObject = {
@@ -80,6 +112,7 @@ let gameObject = {
     enemyExists: false,
     pause: false,
     restart: true,
+    onPlatform: false,
 };
 
 const moveup = (now) => {
@@ -103,6 +136,22 @@ const moveup = (now) => {
             done = true;
         }
     }
+
+    if (
+        hero.getBoundingClientRect().x <
+            platform.getBoundingClientRect().x +
+                platform.getBoundingClientRect().width &&
+        hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
+            platform.getBoundingClientRect().x &&
+        hero.getBoundingClientRect().y <
+            platform.getBoundingClientRect().y +
+                platform.getBoundingClientRect().height &&
+        hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
+            platform.getBoundingClientRect().y
+    ) {
+        console.log("u collision");
+        gameObject.onPlatform = true;
+    }
 };
 
 const movedown = (now) => {
@@ -113,6 +162,11 @@ const movedown = (now) => {
     progress = time.elapsed / time.total;
     newPosition = finalPosition * (1 - progress);
     hero.style.bottom = newPosition + 95 + "px";
+
+    if (gameObject.onPlatform) {
+        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+        console.log(hero.getBoundingClientRect().bottom);
+    }
     if (progress < 1) {
         requestAnimationFrame(movedown);
     } else {
@@ -140,7 +194,6 @@ const createPlatform = () => {
     platform.setAttribute("id", "brick");
     game.appendChild(platform);
 };
-
 const createPrizePlatform = () => {
     prizePlatform = document.createElement("div");
     prizePlatform.id = "prizeBrick";
@@ -159,22 +212,21 @@ const createPipe = () => {
     game.appendChild(pipe);
 };
 
-const restart = (time) =>{
+const restart = (time) => {
     time = 0;
-    hero.style.left= 0 + 'px';
-    hero.style.bottom= 95 + 'px';
-
-}
+    hero.style.left = 0 + "px";
+    hero.style.bottom = 95 + "px";
+};
 
 const pauseMenu = () => {
     menu = document.createElement("div");
     menu.id = "pauseMenu";
-    menu.textContent = `PRESS C TO CONTINUE \r\n\r\n\r\n PRESS R TO RESTART`;
+    menu.textContent = `PRESS C TO CONTINUE \r\n\r\n\r\nPRESS R TO RESTART`;
     if (gameObject.pause) {
-        if (!paused){
+        if (!paused) {
             game.appendChild(menu);
             paused = true;
-        } 
+        }
     }
 };
 
@@ -211,8 +263,8 @@ const control = (e) => {
     } else if (e.key === "c" || e.key === "C") {
         game.lastChild.remove();
         gameObject.pause = false;
-        paused = false;  
-    } 
+        paused = false;
+    }
     // else if (e.key === "r" || e.key === "R") {
     //     gameObject.restart = true;
     // }
@@ -228,9 +280,9 @@ pauseMenu();
 console.log(platform.getBoundingClientRect());
 
 const gameLoop = (timestamp) => {
-    if (!gameObject.pause) {        
-        gameTime++
-        timer.textContent = 20 - ((gameTime/10)/10).toFixed(1);
+    if (!gameObject.pause) {
+        gameTime++;
+        timer.textContent = 20 - (gameTime / 10 / 10).toFixed(1);
         enemyCounter++;
         if (enemyCounter === 500) {
             createEnemy();
@@ -261,11 +313,11 @@ const gameLoop = (timestamp) => {
             moveEnemy();
             //gameObject.enemyExists = false;
         }
-    }else{
+    } else {
         pauseMenu();
     }
 
-    if (20 - ((gameTime/10)/10).toFixed(1) > 0) {
+    if (20 - (gameTime / 10 / 10).toFixed(1) > 0) {
         requestAnimationFrame(gameLoop);
     }
 };
