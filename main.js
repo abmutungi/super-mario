@@ -25,6 +25,8 @@ let timer;
 let gameTime = 0;
 let pipe;
 let menu;
+let leftC = false;
+let rightC = false;
 let paused = false;
 const animateScript = () => {
     hero.style.backgroundPosition = `-${position}px 0px`;
@@ -40,36 +42,48 @@ const showTimer = () => {
 
 showTimer();
 
-const moveRight = () => {
+const moveRight = (timestamp) => {
     if (
         hero.getBoundingClientRect().right <
         game.getBoundingClientRect().right - 35
+        
+        
     ) {
         right += 25;
         hero.style.transform = `translateX(${right}px)`;
 
         console.log("right");
-        console.log(hero.getBoundingClientRect().right);
+        console.log("hero left, ",hero.getBoundingClientRect());
         gameObject.right = false;
-    } else {
+    } else if (hero.getBoundingClientRect().right >=
+    game.getBoundingClientRect().right - 35){
         hero.style.left -= 50 + "px";
     }
+    if (gameObject.onPlatform && hero.getBoundingClientRect().right - 50 > platform.getBoundingClientRect().right){
+        gameObject.onPlatform = false;
+        hero.style.bottom = 95 + 'px'
+        //hero.style.transform = `translate(${right},95px)`
+    }
 
-    if (
-        hero.getBoundingClientRect().x <
-            platform.getBoundingClientRect().x +
-                platform.getBoundingClientRect().width &&
-        hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
-            platform.getBoundingClientRect().x &&
-        hero.getBoundingClientRect().y <
-            platform.getBoundingClientRect().y +
-                platform.getBoundingClientRect().height &&
-        hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
-            platform.getBoundingClientRect().y
-    ) {
-        console.log("r collision");
-        gameObject.onPlatform = true;
-    } 
+    // if (
+    //     hero.getBoundingClientRect().x <
+    //         platform.getBoundingClientRect().x +
+    //             platform.getBoundingClientRect().width &&
+    //     hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
+    //         platform.getBoundingClientRect().x &&
+    //     hero.getBoundingClientRect().y <
+    //         platform.getBoundingClientRect().y +
+    //             platform.getBoundingClientRect().height &&
+    //     hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
+    //         platform.getBoundingClientRect().y
+    // ) {
+    //     console.log("r collision");
+    //     rightC = true;
+    //     gameObject.onPlatform = true;
+    // }else{
+    //     gameObject.onPlatform = false;
+    //     movedown();
+    // }
 };
 
 const moveLeft = () => {
@@ -83,25 +97,37 @@ const moveLeft = () => {
         console.log("left");
         console.log(hero.getBoundingClientRect().left);
         gameObject.left = false;
-    } else {
+    } else if (hero.getBoundingClientRect().left <
+    game.getBoundingClientRect().left + 35) {
         hero.style.left += 50 + "px";
     }
 
-    if (
-        hero.getBoundingClientRect().x <
-            platform.getBoundingClientRect().x +
-                platform.getBoundingClientRect().width &&
-        hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
-            platform.getBoundingClientRect().x &&
-        hero.getBoundingClientRect().y <
-            platform.getBoundingClientRect().y +
-                platform.getBoundingClientRect().height &&
-        hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
-            platform.getBoundingClientRect().y
-    ) {
-        console.log("l collision");
-        gameObject.onPlatform = true;
+    if (gameObject.onPlatform && hero.getBoundingClientRect().left + 50 < platform.getBoundingClientRect().left){
+        gameObject.onPlatform = false;
+        hero.style.bottom = 95 + 'px'
+       //hero.style.transform = `translateY(95px)`
+        // hero.style.translate = `translateY(95px)`
     }
+
+    // if (
+    //     hero.getBoundingClientRect().x <
+    //         platform.getBoundingClientRect().x +
+    //             platform.getBoundingClientRect().width &&
+    //     hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
+    //         platform.getBoundingClientRect().x &&
+    //     hero.getBoundingClientRect().y <
+    //         platform.getBoundingClientRect().y +
+    //             platform.getBoundingClientRect().height &&
+    //     hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
+    //         platform.getBoundingClientRect().y
+    // ) {
+    //     console.log("l collision");
+    //     leftC = true;
+    //     gameObject.onPlatform = true;
+    // }else{
+    //     gameObject.onPlatform = false;
+    //     movedown();
+    // }
 };
 
 let gameObject = {
@@ -116,7 +142,7 @@ let gameObject = {
 };
 
 const moveup = (now) => {
-    if (gameObject.jump) {
+    if (gameObject.jump && !gameObject.onPlatform) {
         //isJumping = true
 
         if (!time.start) time.start = now;
@@ -135,27 +161,47 @@ const moveup = (now) => {
             requestAnimationFrame(movedown);
             done = true;
         }
+    }else if (gameObject.onPlatform){
+        
+        if (progress < 1) {
+            if (!done) {
+                gameObject.onPlatform = false;
+                requestAnimationFrame(moveup);
+                done = false;
+            }
+        } else {
+            gameObject.onPlatform = false;
+            time.start = 0;
+            requestAnimationFrame(movedown);
+            gameObject.jump = false;
+            done = true;
+        }
     }
 
-    if (
-        hero.getBoundingClientRect().x <
-            platform.getBoundingClientRect().x +
-                platform.getBoundingClientRect().width &&
-        hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
-            platform.getBoundingClientRect().x &&
-        hero.getBoundingClientRect().y <
-            platform.getBoundingClientRect().y +
-                platform.getBoundingClientRect().height &&
-        hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
-            platform.getBoundingClientRect().y
-    ) {
-        console.log("u collision");
-        gameObject.onPlatform = true;
-    }
+    // if (
+    //     hero.getBoundingClientRect().x <
+    //         platform.getBoundingClientRect().x +
+    //             platform.getBoundingClientRect().width &&
+    //     hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
+    //         platform.getBoundingClientRect().x &&
+    //     hero.getBoundingClientRect().y <
+    //         platform.getBoundingClientRect().y +
+    //             platform.getBoundingClientRect().height &&
+    //     hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
+    //         platform.getBoundingClientRect().y
+    // ) {
+    //     console.log("u collision");
+    //     if (leftC & rightC) gameObject.onPlatform = true;
+    // }
 };
 
 const movedown = (now) => {
+    if (!gameObject.onPlatform){
     gameObject.jump = false;
+    console.log("bool for collision",collisionCheck());
+    
+
+   // console.log("mario when jumping", hero.getBoundingClientRect());
 
     if (!time.start) time.start = now;
     time.elapsed = now - time.start;
@@ -167,12 +213,18 @@ const movedown = (now) => {
         hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
         console.log(hero.getBoundingClientRect().bottom);
     }
-    if (progress < 1) {
+    if (progress < 1 && !collisionCheck()) {
         requestAnimationFrame(movedown);
     } else {
+        if (gameObject.onPlatform){
+            
+            hero.style.bottom = platform.getBoundingClientRect().bottom -70 +'px'
+            
+        }
         time.start = 0;
     }
     done = false;
+}
 };
 
 const newJump = () => {
@@ -192,6 +244,7 @@ const createEnemy = () => {
 const createPlatform = () => {
     platform = document.createElement("div");
     platform.setAttribute("id", "brick");
+    platform.style.left = Math.random() * 1200 + "px";
     game.appendChild(platform);
 };
 const createPrizePlatform = () => {
@@ -229,6 +282,8 @@ const pauseMenu = () => {
         }
     }
 };
+
+
 
 const moveEnemy = () => {
     enemyLeft -= 10;
@@ -277,20 +332,41 @@ createPlatform();
 createPrizePlatform();
 createCoin();
 pauseMenu();
-console.log(platform.getBoundingClientRect());
+console.log("platform",platform.getBoundingClientRect());
+const collisionCheck = () =>{
+
+    if (hero.getBoundingClientRect().left >= platform.getBoundingClientRect().left
+    && hero.getBoundingClientRect().right <= platform.getBoundingClientRect().right
+    && hero.getBoundingClientRect().bottom < platform.getBoundingClientRect().top
+    ){
+        gameObject.onPlatform = true;
+        
+        console.log("HE'S ON THE PLATFORM");
+        return true
+    }
+return false
+}
+
+const downOffPlatform = () => {
+    if (gameObject.onPlatform && !collisionCheck()){
+        movedown();
+    }
+}
+
+
 
 const gameLoop = (timestamp) => {
     if (!gameObject.pause) {
         gameTime++;
-        timer.textContent = 20 - (gameTime / 10 / 10).toFixed(1);
+        timer.textContent = Math.trunc(120 - (gameTime / 10 / 10));
         enemyCounter++;
         if (enemyCounter === 500) {
             createEnemy();
         }
-        if (gameTime < 50) {
+        if (timer.textContent < 50) {
             timer.style.color = "red";
         }
-        if (gameTime === 50.0) createPipe();
+        if (timer.textContent === 50.0) createPipe();
         hero.style.backgroundPosition = `-${position}px 0px`;
 
         if (gameObject.jump) {
@@ -298,7 +374,7 @@ const gameLoop = (timestamp) => {
         }
 
         if (gameObject.right) {
-            moveRight();
+            moveRight(timestamp);
         }
 
         if (gameObject.left) {
@@ -317,7 +393,7 @@ const gameLoop = (timestamp) => {
         pauseMenu();
     }
 
-    if (20 - (gameTime / 10 / 10).toFixed(1) > 0) {
+    if (timer.textContent > 0) {
         requestAnimationFrame(gameLoop);
     }
 };
