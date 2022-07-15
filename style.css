@@ -34,6 +34,15 @@ url('img/pixilart-486741.png') 0px 0px;
 url('img/Bricks.png') 0px 0px;
 }
 
+#floor {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;   
+  height: 94px;
+  width: 5000px;background:
+url('img/Bricks.png') 0px 0px;
+}
+
 #prizeBrick {
   position: absolute;
 
