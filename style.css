@@ -4,6 +4,7 @@
   bottom: 95px;
   height: 88px;
   width: 45.5px;
+  opacity: 1;
   background: url("img/mario-jump.png") 0px 0px;
 }
 
@@ -23,6 +24,15 @@
   height: 40px;
   width: 40px;
   background: url("img/pixilart-486741.png") 0px 0px;
+}
+
+#floor {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  height: 94px;
+  width: 5000px;background:
+url('img/Bricks.png') 0px 0px;
 }
 
 #brick {

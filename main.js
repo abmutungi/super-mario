@@ -7,7 +7,8 @@ let time = {
   total: 500,
 };
 let done = false;
-let right = 100;
+let floor;
+let right = 0;
 let jump = 0;
 let bottom = 0;
 let gravity = 0.9;
@@ -26,8 +27,10 @@ let coin;
 let timer;
 let score;
 let currScore = "0";
+let heroY = 0;
 let lives;
 let currLives = 3;
+let heroOpacity = 1;
 let gameTime = 0;
 let pipe;
 let menu;
@@ -46,6 +49,13 @@ const animateScript = () => {
     hero.style.bottom = 95 + "px";
     //hero.style.transform = `translateY(-95px)`
   }
+};
+
+const createFloor = () => {
+  floor = document.createElement("div");
+  floor.setAttribute("id", "floor");
+  game.appendChild(floor);
+  
 };
 
 const showTimer = () => {
@@ -73,6 +83,7 @@ const showLives = () => {
 showTimer();
 showScore();
 showLives();
+createFloor();
 
 const moveRight = (timestamp) => {
   if (
@@ -82,8 +93,8 @@ const moveRight = (timestamp) => {
     right += 25;
     hero.style.transform = `translateX(${right}px)`;
 
-    console.log("right");
-    console.log("hero left, ", hero.getBoundingClientRect());
+    //console.log("right");
+   // console.log("hero left, ", hero.getBoundingClientRect());
     gameObject.right = false;
   } else if (
     hero.getBoundingClientRect().right >=
@@ -130,8 +141,8 @@ const moveLeft = () => {
     right -= 25;
     hero.style.transform = `translateX(${right}px) scaleX(-1)`;
 
-    console.log("left");
-    console.log(hero.getBoundingClientRect().left);
+    //console.log("left");
+    //console.log(hero.getBoundingClientRect().left);
     gameObject.left = false;
   } else if (
     hero.getBoundingClientRect().left <
@@ -200,42 +211,41 @@ const moveup = (now) => {
         done = false;
       }
     } else {
-      time.start = 0;
+      time.start = null;
       gameObject.jump = false;
       requestAnimationFrame(movedown);
       done = true;
     }
   } else if (gameObject.onPlatform) {
+   
+    heroY = platform.getBoundingClientRect().top;
+    console.log("newPosition => ",newPosition);
+    if (!time.start) time.start = now;
+    console.log("time.start=> ", time.start);
+    time.elapsed = now - time.start;
+    console.log("time.elapsed => ", time.elapsed);
+    progress = time.elapsed / time.total;
+    console.log("progress => ", progress);
+    newPosition = progress * heroY;
+    console.log("2nd newPosition => ",newPosition)
+    console.log("hero bottom => ",hero.style.bottom);
+    hero.style.bottom = heroY + 95 + "px";
     if (progress < 1) {
       if (!done) {
-        gameObject.onPlatform = false;
+        
         requestAnimationFrame(moveup);
         done = false;
       }
     } else {
       gameObject.onPlatform = false;
-      time.start = 0;
+      time.start = null;
       requestAnimationFrame(movedown);
       gameObject.jump = false;
       done = true;
     }
   }
 
-  // if (
-  //     hero.getBoundingClientRect().x <
-  //         platform.getBoundingClientRect().x +
-  //             platform.getBoundingClientRect().width &&
-  //     hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
-  //         platform.getBoundingClientRect().x &&
-  //     hero.getBoundingClientRect().y <
-  //         platform.getBoundingClientRect().y +
-  //             platform.getBoundingClientRect().height &&
-  //     hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
-  //         platform.getBoundingClientRect().y
-  // ) {
-  //     console.log("u collision");
-  //     if (leftC & rightC) gameObject.onPlatform = true;
-  // }
+
 };
 
 const movedown = (now) => {
@@ -258,7 +268,7 @@ const movedown = (now) => {
       if (gameObject.onPlatform) {
         hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
       }
-      time.start = 0;
+      time.start = null;
     }
     done = false;
   }else if (gameObject.onPlatform) {
@@ -357,8 +367,24 @@ const moveEnemy = () => {
     enemyLeft = 0;
     enemy.remove();
     gameObject.enemyExists = false;
-    lives.textContent -= 1;
+    heroOpacity -=0.25
+    
+
+    
+    hero.style.opacity = heroOpacity
+  
+        lives.textContent -= 1;
   }
+
+  // if (hero.getBoundingClientRect().bottom < enemy.getBoundingClientRect().top
+  // && enemy.getBoundingClientRect().left < hero.getBoundingClientRect().right 
+  // && enemy.getBoundingClientRect().left > hero.getBoundingClientRect().left){
+  //   enemyLeft = 0;
+  //   enemy.remove();
+  //   gameObject.enemyExists = false;
+  //   score.textContent += 10
+
+  // }
 
   if (
     enemy.getBoundingClientRect().left < game.getBoundingClientRect().left &&
