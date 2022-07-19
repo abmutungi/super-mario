@@ -18,8 +18,10 @@ let starttime;
 let isJumping = false;
 let jumpCount = 0;
 let enemyCounter = 0;
+let platformCounter = 0;
 let enemyLeft = 0;
 let platform;
+let platformLeft = 0;
 let coin;
 let timer;
 let score;
@@ -32,8 +34,18 @@ let menu;
 let leftC = false;
 let rightC = false;
 let paused = false;
+let surfaces = [];
 const animateScript = () => {
   hero.style.backgroundPosition = `-${position}px 0px`;
+  if (
+    gameObject.onPlatform &&
+    hero.getBoundingClientRect().right - 50 >
+      platform.getBoundingClientRect().right
+  ) {
+    gameObject.onPlatform = false;
+    hero.style.bottom = 95 + "px";
+    //hero.style.transform = `translateY(-95px)`
+  }
 };
 
 const showTimer = () => {
@@ -86,7 +98,7 @@ const moveRight = (timestamp) => {
   ) {
     gameObject.onPlatform = false;
     hero.style.bottom = 95 + "px";
-    //hero.style.transform = `translate(${right},95px)`
+    //hero.style.transform = `translateY(-95px)`
   }
 
   // if (
@@ -166,6 +178,7 @@ let gameObject = {
   left: false,
   animate: true,
   enemyExists: false,
+  platformExists: false,
   pause: false,
   restart: true,
   onPlatform: false,
@@ -174,6 +187,7 @@ let gameObject = {
 const moveup = (now) => {
   if (gameObject.jump && !gameObject.onPlatform) {
     //isJumping = true
+    
 
     if (!time.start) time.start = now;
     time.elapsed = now - time.start;
@@ -227,7 +241,7 @@ const moveup = (now) => {
 const movedown = (now) => {
   if (!gameObject.onPlatform) {
     gameObject.jump = false;
-    console.log("bool for collision", collisionCheck());
+    //console.log("bool for collision", collisionCheck());
 
     // console.log("mario when jumping", hero.getBoundingClientRect());
 
@@ -237,10 +251,7 @@ const movedown = (now) => {
     newPosition = finalPosition * (1 - progress);
     hero.style.bottom = newPosition + 95 + "px";
 
-    if (gameObject.onPlatform) {
-      hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
-      console.log(hero.getBoundingClientRect().bottom);
-    }
+  
     if (progress < 1 && !collisionCheck()) {
       requestAnimationFrame(movedown);
     } else {
@@ -250,8 +261,11 @@ const movedown = (now) => {
       time.start = 0;
     }
     done = false;
-  }
-};
+  }else if (gameObject.onPlatform) {
+      hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+      console.log(hero.getBoundingClientRect().bottom);
+    }
+  };
 
 const newJump = () => {
   requestAnimationFrame(moveup);
@@ -270,9 +284,35 @@ const createEnemy = () => {
 const createPlatform = () => {
   platform = document.createElement("div");
   platform.setAttribute("id", "brick");
-  platform.style.left = Math.random() * 1200 + "px";
+  platform.style.left = 1400 + "px";
+  platformCounter = 0;
   game.appendChild(platform);
+  gameObject.platformExists = true;
+  // surfaces.push({
+  //   left: platform.getBoundingClientRect().left,
+  //   right: platform.getBoundingClientRect().right,
+  //   top: platform.getBoundingClientRect().top,
+  // })
 };
+
+const movePlatform = () => {
+  platformLeft -= 2;
+
+  platform.style.transform = `translateX(${platformLeft}px) scaleX(-1)`;
+
+  if (
+    platform.getBoundingClientRect().right < game.getBoundingClientRect().left &&
+    gameObject.platformExists
+  ) {
+    platformLeft = 0;
+    platform.remove();
+    gameObject.platformExists = false;
+  }
+
+  // if (gameObject.onPlatform && !collisionCheck()){
+  //   hero.style.bottom = 95 + 'px';
+  // }
+}
 const createPrizePlatform = () => {
   prizePlatform = document.createElement("div");
   prizePlatform.id = "prizeBrick";
@@ -333,8 +373,9 @@ const moveEnemy = () => {
 const enemyCollisionCheck = () => {
   if (gameObject.enemyExists) {
     if (
-      enemy.getBoundingClientRect().left < hero.getBoundingClientRect().right &&
-      hero.getBoundingClientRect().bottom >= 614
+      enemy.getBoundingClientRect().left < hero.getBoundingClientRect().right 
+      && enemy.getBoundingClientRect().left > hero.getBoundingClientRect().left
+      && hero.getBoundingClientRect().bottom >= 614
     ) {
       console.log("HIT");
       return true;
@@ -353,6 +394,7 @@ const control = (e) => {
   }
   if (e.key === " " || e.key === "ArrowUp") {
     gameObject.jump = true;
+    
   } else if (e.key === "ArrowLeft") {
     gameObject.left = true;
   } else if (e.key === "ArrowRight") {
@@ -364,6 +406,7 @@ const control = (e) => {
     gameObject.pause = false;
     paused = false;
   }
+  
   // else if (e.key === "r" || e.key === "R") {
   //     gameObject.restart = true;
   // }
@@ -372,15 +415,22 @@ const control = (e) => {
 document.addEventListener("keydown", function (e) {
   control(e);
 });
-createPlatform();
+ createPlatform();
 createPrizePlatform();
 createCoin();
 pauseMenu();
-console.log("platform", platform.getBoundingClientRect());
-console.log("hero rect", hero.getBoundingClientRect());
-if (gameObject.enemyExists) {
-  console.log("ENEMY RECT", enemy.getBoundingClientRect());
-}
+
+// const MAPcollisionCheck = () =>
+//     console.log("checking map surfaces ===> ",surfaces
+//         .map((each) => {
+//             hero.getBoundingClientRect().left >= each.left ||
+//                 hero.getBoundingClientRect().right <= each.right ||
+//                 hero.getBoundingClientRect().bottom < each.top;
+        
+//       }).some((e) => e === true))
+
+        
+
 const collisionCheck = () => {
   if (
     hero.getBoundingClientRect().left >=
@@ -397,6 +447,7 @@ const collisionCheck = () => {
   return false;
 };
 
+
 const downOffPlatform = () => {
   if (gameObject.onPlatform && !collisionCheck()) {
     movedown();
@@ -408,8 +459,12 @@ const gameLoop = (timestamp) => {
     gameTime++;
     timer.textContent = Math.trunc(120 - gameTime / 10 / 10);
     enemyCounter++;
+    platformCounter++;
     if (enemyCounter === 500) {
       createEnemy();
+    }
+    if (platformCounter === 1000){
+      createPlatform();
     }
     if (timer.textContent < 50) {
       timer.style.color = "red";
@@ -436,6 +491,10 @@ const gameLoop = (timestamp) => {
     if (gameObject.enemyExists) {
       moveEnemy();
       //gameObject.enemyExists = false;
+    }
+
+    if (gameObject.platformExists){
+      movePlatform();
     }
   } else {
     pauseMenu();
