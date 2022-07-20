@@ -68,14 +68,14 @@ const showTimer = () => {
 const showScore = () => {
     score = document.createElement("div");
     score.id = "score";
-    score.textContent = `SCORE:${currScore.toString()}`;
+    score.textContent = `SCORE: ${currScore}`;
     game.appendChild(score);
 };
 
 const showLives = () => {
     lives = document.createElement("div");
     lives.id = "lives";
-    lives.textContent = currLives;
+    lives.textContent = `LIVES: ${currLives}`;
     game.appendChild(lives);
 };
 
@@ -369,15 +369,19 @@ const moveEnemy = () => {
         heroOpacity -= 0.25;
 
         hero.style.opacity = heroOpacity;
-
-        lives.textContent -= 1;
+      currLives -= 1;
+      currScore -= 5;
+        lives.textContent = `LIVES: ${currLives}`;
+        score.textContent = `SCORE:${currScore}`
     }
 
     if (goombaKill()){
       enemyLeft = 0;
       enemy.remove();
       gameObject.enemyExists = false;
-     score.textContent += 10
+      currScore += 10;
+    score.textContent = `SCORE:${currScore}`;
+     
 
     }
 
@@ -410,8 +414,11 @@ const enemyCollisionCheck = () => {
 
 const goombaKill = () => {
   if (gameObject.enemyExists){
-    if (hero.getBoundingClientRect().left === enemy.getBoundingClientRect().left
-      && hero.getBoundingClientRect().right === enemy.getBoundingClientRect().right
+    if (hero.getBoundingClientRect().left <= enemy.getBoundingClientRect().left
+      && hero.getBoundingClientRect().right >= enemy.getBoundingClientRect().left
+      && hero.getBoundingClientRect().bottom >= enemy.getBoundingClientRect().top -5
+      || hero.getBoundingClientRect().left <= enemy.getBoundingClientRect().right
+      && hero.getBoundingClientRect().right >= enemy.getBoundingClientRect().right
       && hero.getBoundingClientRect().bottom >= enemy.getBoundingClientRect().top -5){
         console.log("GOOMBA KILL");
         return true
@@ -558,7 +565,7 @@ const gameLoop = (timestamp) => {
         pauseMenu();
     }
 
-    if (timer.textContent > 0 && lives.textContent > 0) {
+    if (timer.textContent > 0 && currLives > 0) {
         requestAnimationFrame(gameLoop);
     }
 };
