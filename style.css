@@ -46,8 +46,7 @@ url('img/Bricks.png') 0px 0px;
 
 #prizeBrick {
   position: absolute;
-
-  bottom: 500px;
+  bottom: 365px;
   height: 50px;
   width: 200px;
   background: url("img/Bricks.png") 0px 0px;
