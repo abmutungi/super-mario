@@ -106,6 +106,7 @@ const moveRight = (timestamp) => {
         hero.getBoundingClientRect().right - 50 >
             platform.getBoundingClientRect().right
     ) {
+      
         gameObject.onPlatform = false;
         hero.style.bottom = 95 + "px";
         //hero.style.transform = `translateY(-95px)`
@@ -113,32 +114,21 @@ const moveRight = (timestamp) => {
     if (
         gameObject.onPrize &&
         hero.getBoundingClientRect().right - 50 >
-            prizePlatform.getBoundingClientRect().right
+            prizePlatform.getBoundingClientRect().right 
+            && !platformInlineCheck()
     ) {
-        gameObject.onPrize = false;
+              gameObject.onPrize = false;
         hero.style.bottom = 95 + "px";
         //hero.style.transform = `translateY(-95px)`
+    }else if (gameObject.onPrize && hero.getBoundingClientRect().right - 50 >
+    prizePlatform.getBoundingClientRect().right && platformInlineCheck()){
+      gameObject.onPrize = false;
+      gameObject.onPlatform = true;
+        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+      
     }
 
-    // if (
-    //     hero.getBoundingClientRect().x <
-    //         platform.getBoundingClientRect().x +
-    //             platform.getBoundingClientRect().width &&
-    //     hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
-    //         platform.getBoundingClientRect().x &&
-    //     hero.getBoundingClientRect().y <
-    //         platform.getBoundingClientRect().y +
-    //             platform.getBoundingClientRect().height &&
-    //     hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
-    //         platform.getBoundingClientRect().y
-    // ) {
-    //     console.log("r collision");
-    //     rightC = true;
-    //     gameObject.onPlatform = true;
-    // }else{
-    //     gameObject.onPlatform = false;
-    //     movedown();
-    // }
+   
 };
 
 const moveLeft = () => {
@@ -164,39 +154,28 @@ const moveLeft = () => {
         hero.getBoundingClientRect().left + 50 <
             platform.getBoundingClientRect().left
     ) {
+     
         gameObject.onPlatform = false;
         hero.style.bottom = 95 + "px";
     }
 
     if (
-        gameObject.onPrize &&
-        hero.getBoundingClientRect().left + 50 <
-            prizePlatform.getBoundingClientRect().left
-    ) {
-        gameObject.onPrize = false;
-        hero.style.bottom = 95 + "px";
-        //hero.style.transform = `translateY(95px)`
-        // hero.style.translate = `translateY(95px)`
-    }
-    // if (
-    //     hero.getBoundingClientRect().x <
-    //         platform.getBoundingClientRect().x +
-    //             platform.getBoundingClientRect().width &&
-    //     hero.getBoundingClientRect().x + hero.getBoundingClientRect().width >
-    //         platform.getBoundingClientRect().x &&
-    //     hero.getBoundingClientRect().y <
-    //         platform.getBoundingClientRect().y +
-    //             platform.getBoundingClientRect().height &&
-    //     hero.getBoundingClientRect().y + hero.getBoundingClientRect().height >
-    //         platform.getBoundingClientRect().y
-    // ) {
-    //     console.log("l collision");
-    //     leftC = true;
-    //     gameObject.onPlatform = true;
-    // }else{
-    //     gameObject.onPlatform = false;
-    //     movedown();
-    // }
+      gameObject.onPrize &&
+      hero.getBoundingClientRect().left + 50 <
+          prizePlatform.getBoundingClientRect().left 
+          && !platformInlineCheck()
+  ) {
+            gameObject.onPrize = false;
+      hero.style.bottom = 95 + "px";
+      //hero.style.transform = `translateY(-95px)`
+  }else if (gameObject.onPrize && hero.getBoundingClientRect().left + 50 <
+  prizePlatform.getBoundingClientRect().left && platformInlineCheck()){
+    gameObject.onPrize = false;
+    gameObject.onPlatform = true;
+      hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+    
+  }
+    
 };
 
 let gameObject = {
@@ -430,6 +409,18 @@ const enemyCollisionCheck = () => {
     }
     return false;
 };
+
+const platformInlineCheck = () => {
+  if (platform.getBoundingClientRect().left < prizePlatform.getBoundingClientRect().left
+  && platform.getBoundingClientRect().right  >= prizePlatform.getBoundingClientRect().left ||
+  platform.getBoundingClientRect().left <= prizePlatform.getBoundingClientRect().right
+  && platform.getBoundingClientRect().right  > prizePlatform.getBoundingClientRect().right
+  ){
+    console.log("platforms are in line");
+    return true
+  }
+  return false
+}
 
 //enemyCollisionCheck();
 
