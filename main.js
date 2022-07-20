@@ -218,19 +218,19 @@ const moveup = (now) => {
     }
   } else if (gameObject.onPlatform) {
    
-    heroY = platform.getBoundingClientRect().top;
-    console.log("newPosition => ",newPosition);
+    heroY = platform.getBoundingClientRect().top +100;
+    console.log("----------------------------newPosition => ",newPosition);
     if (!time.start) time.start = now;
     console.log("time.start=> ", time.start);
     time.elapsed = now - time.start;
     console.log("time.elapsed => ", time.elapsed);
     progress = time.elapsed / time.total;
     console.log("progress => ", progress);
-    newPosition = progress * heroY;
-    console.log("2nd newPosition => ",newPosition)
+    newPosition = progress * finalPosition;
+    console.log("heroY => ",heroY)
     console.log("hero bottom => ",hero.style.bottom);
-    hero.style.bottom = heroY + 95 + "px";
-    if (progress < 1) {
+    hero.style.bottom = heroY + newPosition + "px";
+    if (progress < 0.4) {
       if (!done) {
         
         requestAnimationFrame(moveup);
