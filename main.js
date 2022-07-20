@@ -26,7 +26,7 @@ let platformLeft = 0;
 let coin;
 let timer;
 let score;
-let currScore = "0";
+let currScore = 0;
 let heroY = 0;
 let lives;
 let currLives = 3;
@@ -68,7 +68,7 @@ const showTimer = () => {
 const showScore = () => {
     score = document.createElement("div");
     score.id = "score";
-    score.textContent = `SCORE:${currScore}`;
+    score.textContent = `SCORE:${currScore.toString()}`;
     game.appendChild(score);
 };
 
@@ -359,7 +359,7 @@ const pauseMenu = () => {
 };
 
 const moveEnemy = () => {
-    enemyLeft -= 10;
+    enemyLeft -= 2;
 
     enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`;
     if (enemyCollisionCheck() === true) {
@@ -373,15 +373,13 @@ const moveEnemy = () => {
         lives.textContent -= 1;
     }
 
-    // if (hero.getBoundingClientRect().bottom < enemy.getBoundingClientRect().top
-    // && enemy.getBoundingClientRect().left < hero.getBoundingClientRect().right
-    // && enemy.getBoundingClientRect().left > hero.getBoundingClientRect().left){
-    //   enemyLeft = 0;
-    //   enemy.remove();
-    //   gameObject.enemyExists = false;
-    //   score.textContent += 10
+    if (goombaKill()){
+      enemyLeft = 0;
+      enemy.remove();
+      gameObject.enemyExists = false;
+     score.textContent += 10
 
-    // }
+    }
 
     if (
         enemy.getBoundingClientRect().left <
@@ -409,6 +407,18 @@ const enemyCollisionCheck = () => {
     }
     return false;
 };
+
+const goombaKill = () => {
+  if (gameObject.enemyExists){
+    if (hero.getBoundingClientRect().left === enemy.getBoundingClientRect().left
+      && hero.getBoundingClientRect().right === enemy.getBoundingClientRect().right
+      && hero.getBoundingClientRect().bottom >= enemy.getBoundingClientRect().top -5){
+        console.log("GOOMBA KILL");
+        return true
+      }
+      return false
+  }
+}
 
 const platformInlineCheck = () => {
   if (platform.getBoundingClientRect().left < prizePlatform.getBoundingClientRect().left
