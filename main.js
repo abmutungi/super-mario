@@ -373,9 +373,7 @@ const moveEnemy = () => {
       currScore -= 5;
         lives.textContent = `LIVES: ${currLives}`;
         score.textContent = `SCORE:${currScore}`
-    }
-
-    if (goombaKill()){
+    }else if (goombaKill()){
       enemyLeft = 0;
       enemy.remove();
       gameObject.enemyExists = false;
@@ -383,9 +381,7 @@ const moveEnemy = () => {
     score.textContent = `SCORE:${currScore}`;
      
 
-    }
-
-    if (
+    }else if (
         enemy.getBoundingClientRect().left <
             game.getBoundingClientRect().left &&
         gameObject.enemyExists
