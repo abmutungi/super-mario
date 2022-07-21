@@ -18,7 +18,7 @@ let game = document.getElementById("game");
 let starttime;
 let isJumping = false;
 let jumpCount = 0;
-let enemyCounter = 0;
+let goombaCounter = 0;
 let platformCounter = 0;
 let coinCounter = 0;
 let enemyLeft = 0;
@@ -286,7 +286,7 @@ const createGoomba = () => {
   enemy = document.createElement("div");
   enemy.setAttribute("id", "goomba");
   enemy.style.left = 1200 + "px";
-  enemyCounter = 0;
+  goombaCounter = 0;
   console.log("============== CREATING ENEMY =============");
   game.appendChild(enemy);
   gameObject.enemyExists = true;
@@ -444,15 +444,15 @@ const coinCollect = () => {
       (hero.getBoundingClientRect().left <= coin.getBoundingClientRect().left &&
         hero.getBoundingClientRect().right >=
           coin.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().bottom <= 414) ||
+        gameObject.onPrize) ||
       (hero.getBoundingClientRect().left <=
         coin.getBoundingClientRect().right &&
         hero.getBoundingClientRect().right >=
           coin.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().bottom <= 414)
+        gameObject.onPrize)
     ) {
-      prizePlatform.removeChild(coin);
-
+      coin.remove();
+      coinCounter = 0;
       currScore += 10;
       score.textContent = `SCORE:${currScore}`;
       gameObject.coinExists = false;
@@ -560,17 +560,16 @@ const gameLoop = (timestamp) => {
     gameTime++;
     currTime = Math.trunc(120 - gameTime / 10 / 10);
     timer.textContent = `TIME: ${currTime}`;
-    enemyCounter++;
+    goombaCounter++;
     platformCounter++;
     coinCounter++;
-    if (enemyCounter === 500) {
+    if (goombaCounter === 500) {
       createGoomba();
     }
     if (platformCounter === 1000) {
       createPlatform();
     }
-    if (coinCounter === 500) {
-      gameObject.coinExists = true;
+    if (coinCounter === 500 && !gameObject.coinExists) {
       createCoin();
     }
     if (timer.textContent < 50) {
