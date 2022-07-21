@@ -26,13 +26,23 @@
   background: url("img/pixilart-486741.png") 0px 0px;
 }
 
+#redMushroom {
+  position: relative;
+  left: 100px;
+  bottom: 80px;
+  height: 40px;
+  width: 50px;
+  background: url("img/super-mario-bros-8-bit-mushroom-mario-background-1e204bf6ce54f1ee445dc8ec41d1eeb7.png")
+    0px 0px;
+}
+
 #floor {
   position: absolute;
   left: 0px;
   bottom: 0px;
   height: 94px;
-  width: 5000px;background:
-url('img/Bricks.png') 0px 0px;
+  width: 5000px;
+  background: url("img/Bricks.png") 0px 0px;
 }
 
 #brick {
@@ -63,7 +73,7 @@ url('img/Bricks.png') 0px 0px;
 
 #timer {
   position: absolute;
-  left: 1000px;
+  left: 1100px;
   bottom: 650px;
   width: 200px;
   height: 30px;
