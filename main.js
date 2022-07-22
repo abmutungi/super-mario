@@ -3,8 +3,8 @@ let newPosition = 0;
 let position = 99.9;
 let finalPosition = 300;
 let time = {
-  start: null,
-  total: 500,
+    start: null,
+    total: 500,
 };
 let done = false;
 let floor;
@@ -18,11 +18,16 @@ let game = document.getElementById("game");
 let starttime;
 let isJumping = false;
 let jumpCount = 0;
+let bowserCounter = 0;
 let goombaCounter = 0;
 let platformCounter = 0;
 let prizeCounter = 0;
 let enemyLeft = 0;
+let fireBall;
+let fireLeft = 0;
+let bowser;
 let platform;
+let princess;
 let platformLeft = 0;
 let coin;
 let redMushroom;
@@ -43,44 +48,44 @@ let paused = false;
 let surfaces = [];
 let randomPrizePicker = 0;
 const animateScript = () => {
-  hero.style.backgroundPosition = `-${position}px 0px`;
-  if (
-    gameObject.onPlatform &&
-    hero.getBoundingClientRect().right - 50 >
-      platform.getBoundingClientRect().right
-  ) {
-    gameObject.onPlatform = false;
-    hero.style.bottom = 95 + "px";
-    //hero.style.transform = `translateY(-95px)`
-  }
+    hero.style.backgroundPosition = `-${position}px 0px`;
+    if (
+        gameObject.onPlatform &&
+        hero.getBoundingClientRect().right - 50 >
+            platform.getBoundingClientRect().right
+    ) {
+        gameObject.onPlatform = false;
+        hero.style.bottom = 95 + "px";
+        //hero.style.transform = `translateY(-95px)`
+    }
 };
 
 const createFloor = () => {
-  floor = document.createElement("div");
-  floor.setAttribute("id", "floor");
-  game.appendChild(floor);
+    floor = document.createElement("div");
+    floor.setAttribute("id", "floor");
+    game.appendChild(floor);
 };
 
 const showTimer = () => {
-  timer = document.createElement("div");
-  timer.id = "timer";
-  timer.textContent = `TIME:${currTime}`;
-  timer.innerHTML = gameTime;
-  game.appendChild(timer);
+    timer = document.createElement("div");
+    timer.id = "timer";
+    timer.textContent = `TIME:${currTime}`;
+    timer.innerHTML = gameTime;
+    game.appendChild(timer);
 };
 
 const showScore = () => {
-  score = document.createElement("div");
-  score.id = "score";
-  score.textContent = `SCORE: ${currScore}`;
-  game.appendChild(score);
+    score = document.createElement("div");
+    score.id = "score";
+    score.textContent = `SCORE: ${currScore}`;
+    game.appendChild(score);
 };
 
 const showLives = () => {
-  lives = document.createElement("div");
-  lives.id = "lives";
-  lives.textContent = `LIVES: ${currLives}`;
-  game.appendChild(lives);
+    lives = document.createElement("div");
+    lives.id = "lives";
+    lives.textContent = `LIVES: ${currLives}`;
+    game.appendChild(lives);
 };
 
 showTimer();
@@ -89,565 +94,674 @@ showLives();
 createFloor();
 
 const moveRight = (timestamp) => {
-  if (
-    hero.getBoundingClientRect().right <
-    game.getBoundingClientRect().right - 35
-  ) {
-    right += 25;
-    hero.style.transform = `translateX(${right}px)`;
+    if (
+        hero.getBoundingClientRect().right <
+        game.getBoundingClientRect().right - 35
+    ) {
+        right += 25;
+        hero.style.transform = `translateX(${right}px)`;
 
-    //console.log("right");
-    // console.log("hero left, ", hero.getBoundingClientRect());
-    gameObject.right = false;
-  } else if (
-    hero.getBoundingClientRect().right >=
-    game.getBoundingClientRect().right - 35
-  ) {
-    hero.style.left -= 50 + "px";
-  }
-  if (
-    gameObject.onPlatform &&
-    hero.getBoundingClientRect().right - 50 >
-      platform.getBoundingClientRect().right
-  ) {
-    gameObject.onPlatform = false;
-    hero.style.bottom = 95 + "px";
-    //hero.style.transform = `translateY(-95px)`
-  }
-  if (
-    gameObject.onPrize &&
-    hero.getBoundingClientRect().right - 50 >
-      prizePlatform.getBoundingClientRect().right &&
-    !platformInlineCheck()
-  ) {
-    gameObject.onPrize = false;
-    hero.style.bottom = 95 + "px";
-    //hero.style.transform = `translateY(-95px)`
-  } else if (
-    gameObject.onPrize &&
-    hero.getBoundingClientRect().right - 50 >
-      prizePlatform.getBoundingClientRect().right &&
-    platformInlineCheck()
-  ) {
-    gameObject.onPrize = false;
-    gameObject.onPlatform = true;
-    hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
-  }
+        //console.log("right");
+        // console.log("hero left, ", hero.getBoundingClientRect());
+        gameObject.right = false;
+    } else if (
+        hero.getBoundingClientRect().right >=
+        game.getBoundingClientRect().right - 35
+    ) {
+        hero.style.left -= 50 + "px";
+    }
+    if (
+        gameObject.onPlatform &&
+        hero.getBoundingClientRect().right - 50 >
+            platform.getBoundingClientRect().right
+    ) {
+        gameObject.onPlatform = false;
+        hero.style.bottom = 95 + "px";
+        //hero.style.transform = `translateY(-95px)`
+    }
+    if (
+        gameObject.onPrize &&
+        hero.getBoundingClientRect().right - 50 >
+            prizePlatform.getBoundingClientRect().right &&
+        !platformInlineCheck()
+    ) {
+        gameObject.onPrize = false;
+        hero.style.bottom = 95 + "px";
+        //hero.style.transform = `translateY(-95px)`
+    } else if (
+        gameObject.onPrize &&
+        hero.getBoundingClientRect().right - 50 >
+            prizePlatform.getBoundingClientRect().right &&
+        platformInlineCheck()
+    ) {
+        gameObject.onPrize = false;
+        gameObject.onPlatform = true;
+        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+    }
 };
 
 const moveLeft = () => {
-  if (
-    hero.getBoundingClientRect().left >
-    game.getBoundingClientRect().left + 35
-  ) {
-    right -= 25;
-    hero.style.transform = `translateX(${right}px) scaleX(-1)`;
+    if (
+        hero.getBoundingClientRect().left >
+        game.getBoundingClientRect().left + 35
+    ) {
+        right -= 25;
+        hero.style.transform = `translateX(${right}px) scaleX(-1)`;
 
-    //console.log("left");
-    //console.log(hero.getBoundingClientRect().left);
-    gameObject.left = false;
-  } else if (
-    hero.getBoundingClientRect().left <
-    game.getBoundingClientRect().left + 35
-  ) {
-    hero.style.left += 50 + "px";
-  }
+        //console.log("left");
+        //console.log(hero.getBoundingClientRect().left);
+        gameObject.left = false;
+    } else if (
+        hero.getBoundingClientRect().left <
+        game.getBoundingClientRect().left + 35
+    ) {
+        hero.style.left += 50 + "px";
+    }
 
-  if (
-    gameObject.onPlatform &&
-    hero.getBoundingClientRect().left + 50 <
-      platform.getBoundingClientRect().left
-  ) {
-    gameObject.onPlatform = false;
-    hero.style.bottom = 95 + "px";
-  }
+    if (
+        gameObject.onPlatform &&
+        hero.getBoundingClientRect().left + 50 <
+            platform.getBoundingClientRect().left
+    ) {
+        gameObject.onPlatform = false;
+        hero.style.bottom = 95 + "px";
+    }
 
-  if (
-    gameObject.onPrize &&
-    hero.getBoundingClientRect().left + 50 <
-      prizePlatform.getBoundingClientRect().left &&
-    !platformInlineCheck()
-  ) {
-    gameObject.onPrize = false;
-    hero.style.bottom = 95 + "px";
-    //hero.style.transform = `translateY(-95px)`
-  } else if (
-    gameObject.onPrize &&
-    hero.getBoundingClientRect().left + 50 <
-      prizePlatform.getBoundingClientRect().left &&
-    platformInlineCheck()
-  ) {
-    gameObject.onPrize = false;
-    gameObject.onPlatform = true;
-    hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
-  }
+    if (
+        gameObject.onPrize &&
+        hero.getBoundingClientRect().left + 50 <
+            prizePlatform.getBoundingClientRect().left &&
+        !platformInlineCheck()
+    ) {
+        gameObject.onPrize = false;
+        hero.style.bottom = 95 + "px";
+        //hero.style.transform = `translateY(-95px)`
+    } else if (
+        gameObject.onPrize &&
+        hero.getBoundingClientRect().left + 50 <
+            prizePlatform.getBoundingClientRect().left &&
+        platformInlineCheck()
+    ) {
+        gameObject.onPrize = false;
+        gameObject.onPlatform = true;
+        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+    }
 };
 
 let gameObject = {
-  jump: false,
-  right: false,
-  left: false,
-  animate: true,
-  enemyExists: false,
-  platformExists: false,
-  pause: false,
-  restart: false,
-  onPlatform: false,
-  onPrize: false,
-  coinExists: false,
-  redMushroomExists: false,
+    jump: false,
+    right: false,
+    left: false,
+    animate: true,
+    enemyExists: false,
+    platformExists: false,
+    pause: false,
+    restart: false,
+    onPlatform: false,
+    onPrize: false,
+    coinExists: false,
+    redMushroomExists: false,
+    bowserExists: false,
 };
 
 const moveup = (now) => {
-  if (gameObject.jump && !gameObject.onPlatform && !gameObject.onPrize) {
-    //isJumping = true
+    if (gameObject.jump && !gameObject.onPlatform && !gameObject.onPrize) {
+        //isJumping = true
 
-    if (!time.start) time.start = now;
-    time.elapsed = now - time.start;
-    progress = time.elapsed / time.total;
-    newPosition = progress * finalPosition;
-    hero.style.bottom = newPosition + 95 + "px";
-    if (progress < 1) {
-      if (!done) {
-        requestAnimationFrame(moveup);
-        done = false;
-      }
-    } else {
-      time.start = null;
-      gameObject.jump = false;
-      requestAnimationFrame(movedown);
-      done = true;
-    }
-  } else if (gameObject.onPlatform) {
-    heroY = platform.getBoundingClientRect().top + 100;
+        if (!time.start) time.start = now;
+        time.elapsed = now - time.start;
+        progress = time.elapsed / time.total;
+        newPosition = progress * finalPosition;
+        hero.style.bottom = newPosition + 95 + "px";
+        if (progress < 1) {
+            if (!done) {
+                requestAnimationFrame(moveup);
+                done = false;
+            }
+        } else {
+            time.start = null;
+            gameObject.jump = false;
+            requestAnimationFrame(movedown);
+            done = true;
+        }
+    } else if (gameObject.onPlatform) {
+        heroY = platform.getBoundingClientRect().top + 100;
 
-    console.log("----------------------------newPosition => ", newPosition);
-    if (!time.start) time.start = now;
-    console.log("time.start=> ", time.start);
-    time.elapsed = now - time.start;
-    console.log("time.elapsed => ", time.elapsed);
-    progress = time.elapsed / time.total;
-    console.log("progress => ", progress);
-    newPosition = progress * finalPosition;
-    console.log("heroY => ", heroY);
-    console.log("hero bottom => ", hero.style.bottom);
-    hero.style.bottom = heroY + newPosition + "px";
-    if (progress < 0.4) {
-      if (!done) {
-        requestAnimationFrame(moveup);
-        done = false;
-      }
-    } else {
-      gameObject.onPlatform = false;
-      time.start = null;
-      requestAnimationFrame(movedown);
-      gameObject.jump = false;
-      done = true;
+        console.log("----------------------------newPosition => ", newPosition);
+        if (!time.start) time.start = now;
+        console.log("time.start=> ", time.start);
+        time.elapsed = now - time.start;
+        console.log("time.elapsed => ", time.elapsed);
+        progress = time.elapsed / time.total;
+        console.log("progress => ", progress);
+        newPosition = progress * finalPosition;
+        console.log("heroY => ", heroY);
+        console.log("hero bottom => ", hero.style.bottom);
+        hero.style.bottom = heroY + newPosition + "px";
+        if (progress < 0.4) {
+            if (!done) {
+                requestAnimationFrame(moveup);
+                done = false;
+            }
+        } else {
+            gameObject.onPlatform = false;
+            time.start = null;
+            requestAnimationFrame(movedown);
+            gameObject.jump = false;
+            done = true;
+        }
     }
-  }
 };
 
 const movedown = (now) => {
-  if (!gameObject.onPlatform && !gameObject.onPrize) {
-    gameObject.jump = false;
-    //console.log("bool for collision", collisionCheck());
+    if (!gameObject.onPlatform && !gameObject.onPrize) {
+        gameObject.jump = false;
+        //console.log("bool for collision", collisionCheck());
 
-    // console.log("mario when jumping", hero.getBoundingClientRect());
+        // console.log("mario when jumping", hero.getBoundingClientRect());
 
-    if (!time.start) time.start = now;
-    time.elapsed = now - time.start;
-    progress = time.elapsed / time.total;
-    newPosition = finalPosition * (1 - progress);
-    hero.style.bottom = newPosition + 95 + "px";
+        if (!time.start) time.start = now;
+        time.elapsed = now - time.start;
+        progress = time.elapsed / time.total;
+        newPosition = finalPosition * (1 - progress);
+        hero.style.bottom = newPosition + 95 + "px";
 
-    if (progress < 1 && !onplatformCheck() && !onprizeCheck()) {
-      requestAnimationFrame(movedown);
-    } else {
-      if (gameObject.onPlatform) {
+        if (progress < 1 && !onplatformCheck() && !onprizeCheck()) {
+            requestAnimationFrame(movedown);
+        } else {
+            if (gameObject.onPlatform) {
+                hero.style.bottom =
+                    platform.getBoundingClientRect().bottom - 70 + "px";
+                // } else if (gameObject.onPrize) {
+                //     hero.style.bottom =
+                //         prizePlatform.getBoundingClientRect().bottom - 70 + "px";
+            }
+            time.start = null;
+        }
+        done = false;
+    } else if (gameObject.onPlatform) {
         hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
-        // } else if (gameObject.onPrize) {
-        //     hero.style.bottom =
-        //         prizePlatform.getBoundingClientRect().bottom - 70 + "px";
-      }
-      time.start = null;
+        console.log(hero.getBoundingClientRect().bottom);
+    } else if (gameObject.onPrize) {
+        hero.style.bottom =
+            prizePlatform.getBoundingClientRect().top + 120 + "px";
     }
-    done = false;
-  } else if (gameObject.onPlatform) {
-    hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
-    console.log(hero.getBoundingClientRect().bottom);
-  } else if (gameObject.onPrize) {
-    hero.style.bottom = prizePlatform.getBoundingClientRect().top + 120 + "px";
-  }
 };
 
 const newJump = () => {
-  requestAnimationFrame(moveup);
+    requestAnimationFrame(moveup);
 };
 
 const createGoomba = () => {
-  enemy = document.createElement("div");
-  enemy.setAttribute("id", "goomba");
-  enemy.style.left = 1200 + "px";
-  goombaCounter = 0;
-  console.log("============== CREATING ENEMY =============");
-  game.appendChild(enemy);
-  gameObject.enemyExists = true;
+    enemy = document.createElement("div");
+    enemy.setAttribute("id", "goomba");
+    enemy.style.left = 1200 + "px";
+    goombaCounter = 0;
+    console.log("============== CREATING ENEMY =============");
+    game.appendChild(enemy);
+    gameObject.enemyExists = true;
+};
+
+const createBowser = () => {
+    bowser = document.createElement("div");
+    bowser.setAttribute("id", "bowser");
+    bowser.style.left = 700 + "px";
+    console.log("============== CREATING BOWSER =============");
+    game.appendChild(bowser);
+    gameObject.bowserExists = true;
+};
+
+const createFire = () => {
+    fireBall = document.createElement("div");
+    fireBall.setAttribute("id", "fire");
+    fireBall.style.left = 700 + "px";
+    //fireCounter = 0;
+    console.log("============== BOWSER SHOOTS FIRE =============");
+    game.appendChild(fireBall);
+    gameObject.bowserExists = true;
+};
+
+const breatheFire = () => {
+    fireLeft -= 6;
+
+    fireBall.style.transform = `translateX(${fireLeft}px) scaleX(-1)`;
+
+    if (fireCollisionCheck() === true) {
+        fireLeft = 0;
+        gameObject.enemyExists = false;
+        heroOpacity -= 0.25;
+
+        hero.style.opacity = heroOpacity;
+        currLives -= 1;
+        currScore -= 10;
+        lives.textContent = `LIVES: ${currLives}`;
+        score.textContent = `SCORE:${currScore}`;
+    } else if (bowserCounter === 2) {
+        fireLeft = 0;
+        fireBall.remove();
+        bowser.remove();
+        gameObject.bowserExists = false;
+        currScore += 50;
+        score.textContent = `SCORE:${currScore}`;
+    } else if (
+        fireBall.getBoundingClientRect().left <
+            game.getBoundingClientRect().left &&
+        gameObject.bowserExists
+    ) {
+        fireLeft = 0;
+        fireBall.remove();
+        bowser.remove();
+        gameObject.bowserExists = false;
+    }
 };
 
 const createPlatform = () => {
-  platform = document.createElement("div");
-  platform.setAttribute("id", "brick");
-  platform.style.left = 1400 + "px";
-  platformCounter = 0;
-  game.appendChild(platform);
-  gameObject.platformExists = true;
-  // surfaces.push({
-  //   left: platform.getBoundingClientRect().left,
-  //   right: platform.getBoundingClientRect().right,
-  //   top: platform.getBoundingClientRect().top,
-  // })
+    platform = document.createElement("div");
+    platform.setAttribute("id", "brick");
+    platform.style.left = 1400 + "px";
+    platformCounter = 0;
+    game.appendChild(platform);
+    gameObject.platformExists = true;
+    // surfaces.push({
+    //   left: platform.getBoundingClientRect().left,
+    //   right: platform.getBoundingClientRect().right,
+    //   top: platform.getBoundingClientRect().top,
+    // })
 };
 
 const movePlatform = () => {
-  platformLeft -= 2;
+    platformLeft -= 2;
 
-  platform.style.transform = `translateX(${platformLeft}px) scaleX(-1)`;
+    platform.style.transform = `translateX(${platformLeft}px) scaleX(-1)`;
 
-  if (
-    platform.getBoundingClientRect().right <
-      game.getBoundingClientRect().left &&
-    gameObject.platformExists
-  ) {
-    platformLeft = 0;
-    platform.remove();
-    gameObject.platformExists = false;
-  }
+    if (
+        platform.getBoundingClientRect().right <
+            game.getBoundingClientRect().left &&
+        gameObject.platformExists
+    ) {
+        platformLeft = 0;
+        platform.remove();
+        gameObject.platformExists = false;
+    }
 
-  // if (gameObject.onPlatform && !collisionCheck()){
-  //   hero.style.bottom = 95 + 'px';
-  // }
+    // if (gameObject.onPlatform && !collisionCheck()){
+    //   hero.style.bottom = 95 + 'px';
+    // }
 };
 const createPrizePlatform = () => {
-  prizePlatform = document.createElement("div");
-  prizePlatform.id = "prizeBrick";
-  prizePlatform.style.left = Math.random() * 1200 + "px";
-  game.appendChild(prizePlatform);
+    prizePlatform = document.createElement("div");
+    prizePlatform.id = "prizeBrick";
+    prizePlatform.style.left = Math.random() * 1200 + "px";
+    game.appendChild(prizePlatform);
 };
 const createCoin = () => {
-  coin = document.createElement("div");
-  coin.setAttribute("id", "coin");
-  prizeCounter = 0;
-  prizePlatform.appendChild(coin);
-  gameObject.coinExists = true;
+    coin = document.createElement("div");
+    coin.setAttribute("id", "coin");
+    prizeCounter = 0;
+    prizePlatform.appendChild(coin);
+    gameObject.coinExists = true;
 };
 
 const createRedMushroom = () => {
-  redMushroom = document.createElement("div");
-  redMushroom.id = "redMushroom";
-  prizeCounter = 0;
-  prizePlatform.appendChild(redMushroom);
-  gameObject.redMushroomExists = true;
+    redMushroom = document.createElement("div");
+    redMushroom.id = "redMushroom";
+    prizeCounter = 0;
+    prizePlatform.appendChild(redMushroom);
+    gameObject.redMushroomExists = true;
 };
 
 const createPipe = () => {
-  pipe = document.createElement("div");
-  pipe.id = "greenPipe";
-  game.appendChild(pipe);
+    pipe = document.createElement("div");
+    pipe.id = "greenPipe";
+    game.appendChild(pipe);
 };
 
 const restart = (score, lives, time, gametime, elem) => {
-  score = 100;
-  score.textContent = `SCORE: ${score}`;
-  lives = 3;
-  time = Math.trunc(120 - gametime / 10 / 10);
-  elem.style.left = 0 + "px";
-  elem.style.bottom = 95 + "px";
-  console.log("restart triggered");
-  gameObject.restart = false;
+    score = 100;
+    score.textContent = `SCORE: ${score}`;
+    lives = 3;
+    time = Math.trunc(120 - gametime / 10 / 10);
+    elem.style.left = 0 + "px";
+    elem.style.bottom = 95 + "px";
+    console.log("restart triggered");
+    gameObject.restart = false;
 };
 
 const pauseMenu = () => {
-  menu = document.createElement("div");
-  menu.id = "pauseMenu";
-  menu.textContent = `PRESS C TO CONTINUE \r\n\r\n\r\nPRESS R TO RESTART`;
-  if (gameObject.pause) {
-    if (!paused) {
-      game.appendChild(menu);
-      paused = true;
+    menu = document.createElement("div");
+    menu.id = "pauseMenu";
+    menu.textContent = `PRESS C TO CONTINUE \r\n\r\n\r\nPRESS R TO RESTART`;
+    if (gameObject.pause) {
+        if (!paused) {
+            game.appendChild(menu);
+            paused = true;
+        }
     }
-  }
 };
 
 const moveGoomba = () => {
-  enemyLeft -= 6;
+    enemyLeft -= 6;
 
-  enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`;
-  if (goombaCollisionCheck() === true) {
-    enemyLeft = 0;
-    enemy.remove();
-    gameObject.enemyExists = false;
-    heroOpacity -= 0.25;
+    enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`;
+    if (goombaCollisionCheck() === true) {
+        enemyLeft = 0;
+        enemy.remove();
+        gameObject.enemyExists = false;
+        heroOpacity -= 0.25;
 
-    hero.style.opacity = heroOpacity;
-    currLives -= 1;
-    currScore -= 5;
-    lives.textContent = `LIVES: ${currLives}`;
-    score.textContent = `SCORE:${currScore}`;
-  } else if (goombaKill()) {
-    enemyLeft = 0;
-    enemy.remove();
-    gameObject.enemyExists = false;
-    currScore += 10;
-    score.textContent = `SCORE:${currScore}`;
-  } else if (
-    enemy.getBoundingClientRect().left < game.getBoundingClientRect().left &&
-    gameObject.enemyExists
-  ) {
-    enemyLeft = 0;
-    enemy.remove();
-    gameObject.enemyExists = false;
-  }
+        hero.style.opacity = heroOpacity;
+        currLives -= 1;
+        currScore -= 5;
+        lives.textContent = `LIVES: ${currLives}`;
+        score.textContent = `SCORE:${currScore}`;
+    } else if (goombaKill()) {
+        enemyLeft = 0;
+        enemy.remove();
+        gameObject.enemyExists = false;
+        currScore += 10;
+        score.textContent = `SCORE:${currScore}`;
+    } else if (
+        enemy.getBoundingClientRect().left <
+            game.getBoundingClientRect().left &&
+        gameObject.enemyExists
+    ) {
+        enemyLeft = 0;
+        enemy.remove();
+        gameObject.enemyExists = false;
+    }
 };
 
 const goombaCollisionCheck = () => {
-  if (gameObject.enemyExists) {
-    if (
-      enemy.getBoundingClientRect().left < hero.getBoundingClientRect().right &&
-      enemy.getBoundingClientRect().left > hero.getBoundingClientRect().left &&
-      hero.getBoundingClientRect().bottom >= 614
-    ) {
-      console.log("HIT");
-      return true;
+    if (gameObject.enemyExists) {
+        if (
+            enemy.getBoundingClientRect().left <
+                hero.getBoundingClientRect().right &&
+            enemy.getBoundingClientRect().left >
+                hero.getBoundingClientRect().left &&
+            hero.getBoundingClientRect().bottom >= 614
+        ) {
+            console.log("HIT");
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 };
 
 const goombaKill = () => {
-  if (gameObject.enemyExists) {
-    if (
-      (hero.getBoundingClientRect().left <=
-        enemy.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().right >=
-          enemy.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().bottom >=
-          enemy.getBoundingClientRect().top - 5) ||
-      (hero.getBoundingClientRect().left <=
-        enemy.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().right >=
-          enemy.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().bottom >=
-          enemy.getBoundingClientRect().top - 5)
-    ) {
-      console.log("GOOMBA KILL");
-      return true;
+    if (gameObject.enemyExists) {
+        if (
+            (hero.getBoundingClientRect().left <=
+                enemy.getBoundingClientRect().left &&
+                hero.getBoundingClientRect().right >=
+                    enemy.getBoundingClientRect().left &&
+                hero.getBoundingClientRect().bottom >=
+                    enemy.getBoundingClientRect().top - 5) ||
+            (hero.getBoundingClientRect().left <=
+                enemy.getBoundingClientRect().right &&
+                hero.getBoundingClientRect().right >=
+                    enemy.getBoundingClientRect().right &&
+                hero.getBoundingClientRect().bottom >=
+                    enemy.getBoundingClientRect().top - 5)
+        ) {
+            console.log("GOOMBA KILL");
+            return true;
+        }
+        return false;
+    }
+};
+
+const fireCollisionCheck = () => {
+    if (gameObject.bowserExists) {
+        if (
+            fireBall.getBoundingClientRect().left <
+                hero.getBoundingClientRect().right &&
+            fireBall.getBoundingClientRect().left >
+                hero.getBoundingClientRect().left &&
+            hero.getBoundingClientRect().bottom >= 614
+        ) {
+            console.log("flamesed");
+            return true;
+        }
     }
     return false;
-  }
+};
+
+const bowserHit = () => {
+    if (gameObject.bowserExists) {
+        if (
+            (hero.getBoundingClientRect().left <=
+                bowser.getBoundingClientRect().left &&
+                hero.getBoundingClientRect().right >=
+                    bowser.getBoundingClientRect().left &&
+                hero.getBoundingClientRect().bottom >=
+                    bowser.getBoundingClientRect().top - 5) ||
+            (hero.getBoundingClientRect().left <=
+                bowser.getBoundingClientRect().right &&
+                hero.getBoundingClientRect().right >=
+                    bowser.getBoundingClientRect().right &&
+                hero.getBoundingClientRect().bottom >=
+                    bowser.getBoundingClientRect().top - 5)
+        ) {
+            bowserCounter += 1;
+            console.log("Bowser Hit", bowserCounter);
+        }
+        return false;
+    }
 };
 
 const coinCollect = () => {
-  if (gameObject.coinExists) {
-    if (
-      (hero.getBoundingClientRect().left <= coin.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().right >=
-          coin.getBoundingClientRect().left &&
-        gameObject.onPrize) ||
-      (hero.getBoundingClientRect().left <=
-        coin.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().right >=
-          coin.getBoundingClientRect().right &&
-        gameObject.onPrize)
-    ) {
-      coin.remove();
-      prizeCounter = 0;
-      currScore += 10;
-      score.textContent = `SCORE:${currScore}`;
-      gameObject.coinExists = false;
+    if (gameObject.coinExists) {
+        if (
+            (hero.getBoundingClientRect().left <=
+                coin.getBoundingClientRect().left &&
+                hero.getBoundingClientRect().right >=
+                    coin.getBoundingClientRect().left &&
+                gameObject.onPrize) ||
+            (hero.getBoundingClientRect().left <=
+                coin.getBoundingClientRect().right &&
+                hero.getBoundingClientRect().right >=
+                    coin.getBoundingClientRect().right &&
+                gameObject.onPrize)
+        ) {
+            coin.remove();
+            prizeCounter = 0;
+            currScore += 10;
+            score.textContent = `SCORE:${currScore}`;
+            gameObject.coinExists = false;
+        }
     }
-  }
 };
 
 const redMushroomCollect = () => {
-  if (gameObject.redMushroomExists) {
-    if (
-      (hero.getBoundingClientRect().left <=
-        redMushroom.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().right >=
-          redMushroom.getBoundingClientRect().left &&
-        gameObject.onPrize) ||
-      (hero.getBoundingClientRect().left <=
-        redMushroom.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().right >=
-          redMushroom.getBoundingClientRect().right &&
-        gameObject.onPrize)
-    ) {
-      redMushroom.remove();
-      prizeCounter = 0;
-      currScore += 10;
-      score.textContent = `SCORE:${currScore}`;
-      gameObject.redMushroomExists = false;
+    if (gameObject.redMushroomExists) {
+        if (
+            (hero.getBoundingClientRect().left <=
+                redMushroom.getBoundingClientRect().left &&
+                hero.getBoundingClientRect().right >=
+                    redMushroom.getBoundingClientRect().left &&
+                gameObject.onPrize) ||
+            (hero.getBoundingClientRect().left <=
+                redMushroom.getBoundingClientRect().right &&
+                hero.getBoundingClientRect().right >=
+                    redMushroom.getBoundingClientRect().right &&
+                gameObject.onPrize)
+        ) {
+            redMushroom.remove();
+            prizeCounter = 0;
+            currScore += 10;
+            score.textContent = `SCORE:${currScore}`;
+            gameObject.redMushroomExists = false;
+        }
     }
-  }
 };
 
 const platformInlineCheck = () => {
-  if (
-    (platform.getBoundingClientRect().left <
-      prizePlatform.getBoundingClientRect().left &&
-      platform.getBoundingClientRect().right >=
-        prizePlatform.getBoundingClientRect().left) ||
-    (platform.getBoundingClientRect().left <=
-      prizePlatform.getBoundingClientRect().right &&
-      platform.getBoundingClientRect().right >
-        prizePlatform.getBoundingClientRect().right)
-  ) {
-    console.log("platforms are in line");
-    return true;
-  }
-  return false;
+    if (
+        (platform.getBoundingClientRect().left <
+            prizePlatform.getBoundingClientRect().left &&
+            platform.getBoundingClientRect().right >=
+                prizePlatform.getBoundingClientRect().left) ||
+        (platform.getBoundingClientRect().left <=
+            prizePlatform.getBoundingClientRect().right &&
+            platform.getBoundingClientRect().right >
+                prizePlatform.getBoundingClientRect().right)
+    ) {
+        console.log("platforms are in line");
+        return true;
+    }
+    return false;
 };
 
 const control = (e) => {
-  if (position < 250) {
-    position = position + 99.9;
-  } else {
-    position = 99.9;
-  }
-  if (e.key === " " || e.key === "ArrowUp") {
-    gameObject.jump = true;
-  } else if (e.key === "ArrowLeft") {
-    gameObject.left = true;
-  } else if (e.key === "ArrowRight") {
-    gameObject.right = true;
-  } else if (e.key === "p" || e.key === "P") {
-    gameObject.pause = true;
-  } else if (e.key === "c" || e.key === "C") {
-    if (gameObject.pause) {
-      game.lastChild.remove();
-      gameObject.pause = false;
-      paused = false;
+    if (position < 250) {
+        position = position + 99.9;
+    } else {
+        position = 99.9;
     }
-  } else if (e.key === "r" || e.key === "R") {
-    if (gameObject.pause) {
-      location.reload();
+    if (e.key === " " || e.key === "ArrowUp") {
+        gameObject.jump = true;
+    } else if (e.key === "ArrowLeft") {
+        gameObject.left = true;
+    } else if (e.key === "ArrowRight") {
+        gameObject.right = true;
+    } else if (e.key === "p" || e.key === "P") {
+        gameObject.pause = true;
+    } else if (e.key === "c" || e.key === "C") {
+        if (gameObject.pause) {
+            game.lastChild.remove();
+            gameObject.pause = false;
+            paused = false;
+        }
+    } else if (e.key === "r" || e.key === "R") {
+        if (gameObject.pause) {
+            location.reload();
+        }
     }
-  }
 };
 
 document.addEventListener("keydown", function (e) {
-  control(e);
+    control(e);
 });
 createPlatform();
 createPrizePlatform();
 
 const prizeGenerator = () => {
-  randomPrizePicker = Math.random() * 2;
-  if (randomPrizePicker < 1) createCoin();
-  if (randomPrizePicker >= 1) createRedMushroom();
+    randomPrizePicker = Math.random() * 2;
+    if (randomPrizePicker < 1) createCoin();
+    if (randomPrizePicker >= 1) createRedMushroom();
 };
 
 const onplatformCheck = () => {
-  if (
-    hero.getBoundingClientRect().left >=
-      platform.getBoundingClientRect().left &&
-    hero.getBoundingClientRect().right <=
-      platform.getBoundingClientRect().right &&
-    hero.getBoundingClientRect().bottom < platform.getBoundingClientRect().top
-  ) {
-    gameObject.onPlatform = true;
+    if (
+        hero.getBoundingClientRect().left >=
+            platform.getBoundingClientRect().left &&
+        hero.getBoundingClientRect().right <=
+            platform.getBoundingClientRect().right &&
+        hero.getBoundingClientRect().bottom <
+            platform.getBoundingClientRect().top
+    ) {
+        gameObject.onPlatform = true;
 
-    console.log("HE'S ON THE PLATFORM");
-    return true;
-  }
-  return false;
+        console.log("HE'S ON THE PLATFORM");
+        return true;
+    }
+    return false;
 };
 
 const onprizeCheck = () => {
-  if (
-    hero.getBoundingClientRect().left >=
-      prizePlatform.getBoundingClientRect().left &&
-    hero.getBoundingClientRect().right <=
-      prizePlatform.getBoundingClientRect().right &&
-    hero.getBoundingClientRect().bottom <
-      prizePlatform.getBoundingClientRect().top
-  ) {
-    gameObject.onPrize = true;
+    if (
+        hero.getBoundingClientRect().left >=
+            prizePlatform.getBoundingClientRect().left &&
+        hero.getBoundingClientRect().right <=
+            prizePlatform.getBoundingClientRect().right &&
+        hero.getBoundingClientRect().bottom <
+            prizePlatform.getBoundingClientRect().top
+    ) {
+        gameObject.onPrize = true;
 
-    console.log("HE'S ON THE PRIZE PLATFORM");
-    return true;
-  }
-  return false;
+        console.log("HE'S ON THE PRIZE PLATFORM");
+        return true;
+    }
+    return false;
 };
 
 const gameLoop = (timestamp) => {
-  if (!gameObject.pause) {
-    gameTime++;
-    currTime = Math.trunc(120 - gameTime / 10 / 10);
-    timer.textContent = `TIME: ${currTime}`;
-    goombaCounter++;
-    platformCounter++;
-    prizeCounter++;
-    if (goombaCounter === 500) {
-      createGoomba();
-    }
-    if (platformCounter === 1000) {
-      createPlatform();
-    }
-    if (
-      prizeCounter === 500 &&
-      !gameObject.coinExists &&
-      !gameObject.redMushroomExists
-    ) {
-      prizeGenerator();
-    }
-    if (timer.textContent < 50) {
-      timer.style.color = "red";
-    }
-    if (timer.textContent === 50.0) createPipe();
-    hero.style.backgroundPosition = `-${position}px 0px`;
+    if (!gameObject.pause) {
+        gameTime++;
+        currTime = Math.trunc(120 - gameTime / 10 / 10);
+        timer.textContent = `TIME: ${currTime}`;
+        goombaCounter++;
+        platformCounter++;
+        prizeCounter++;
 
-    if (gameObject.jump) {
-      onplatformCheck();
-      onprizeCheck();
-      newJump();
+        if (currScore >= 10 && !gameObject.bowserExists && bowserCounter < 3) {
+            createFire();
+            createBowser();
+        }
+
+        if (goombaCounter === 500) {
+            createGoomba();
+        }
+        if (platformCounter === 1000) {
+            createPlatform();
+        }
+        if (
+            prizeCounter === 500 &&
+            !gameObject.coinExists &&
+            !gameObject.redMushroomExists
+        ) {
+            prizeGenerator();
+        }
+        if (timer.textContent < 50) {
+            timer.style.color = "red";
+        }
+        if (timer.textContent === 50.0) createPipe();
+        hero.style.backgroundPosition = `-${position}px 0px`;
+
+        if (gameObject.jump) {
+            onplatformCheck();
+            onprizeCheck();
+            newJump();
+        }
+
+        if (gameObject.right) {
+            moveRight(timestamp);
+        }
+
+        if (gameObject.left) {
+            moveLeft();
+        }
+
+        if (gameObject.animate) {
+            animateScript();
+        }
+
+        if (gameObject.enemyExists) {
+            moveGoomba();
+        }
+
+        if (gameObject.bowserExists) {
+            breatheFire();
+        }
+
+        if (gameObject.platformExists) {
+            movePlatform();
+        }
+
+        if (gameObject.coinExists) {
+            coinCollect();
+        }
+
+        if (gameObject.redMushroomExists) {
+            redMushroomCollect();
+        }
+    } else {
+        pauseMenu();
     }
 
-    if (gameObject.right) {
-      moveRight(timestamp);
+    if (currTime > 0 && currLives > 0) {
+        requestAnimationFrame(gameLoop);
     }
-
-    if (gameObject.left) {
-      moveLeft();
-    }
-
-    if (gameObject.animate) {
-      animateScript();
-    }
-
-    if (gameObject.enemyExists) {
-      moveGoomba();
-      //gameObject.enemyExists = false;
-    }
-
-    if (gameObject.platformExists) {
-      movePlatform();
-    }
-
-    if (gameObject.coinExists) {
-      coinCollect();
-    }
-
-    if (gameObject.redMushroomExists) {
-      redMushroomCollect();
-    }
-  } else {
-    pauseMenu();
-  }
-
-  if (currTime > 0 && currLives > 0) {
-    requestAnimationFrame(gameLoop);
-  }
 };
 
 requestAnimationFrame(gameLoop);
