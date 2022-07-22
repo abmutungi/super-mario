@@ -20,7 +20,7 @@ let isJumping = false;
 let jumpCount = 0;
 let goombaCounter = 0;
 let platformCounter = 0;
-let coinCounter = 0;
+let prizeCounter = 0;
 let enemyLeft = 0;
 let platform;
 let platformLeft = 0;
@@ -41,6 +41,7 @@ let leftC = false;
 let rightC = false;
 let paused = false;
 let surfaces = [];
+let randomPrizePicker = 0;
 const animateScript = () => {
   hero.style.backgroundPosition = `-${position}px 0px`;
   if (
@@ -194,6 +195,7 @@ let gameObject = {
   onPlatform: false,
   onPrize: false,
   coinExists: false,
+  redMushroomExists: false,
 };
 
 const moveup = (now) => {
@@ -334,16 +336,17 @@ const createPrizePlatform = () => {
 const createCoin = () => {
   coin = document.createElement("div");
   coin.setAttribute("id", "coin");
-  coinCounter = 0;
+  prizeCounter = 0;
   prizePlatform.appendChild(coin);
   gameObject.coinExists = true;
-  coinCollect();
 };
 
 const createRedMushroom = () => {
   redMushroom = document.createElement("div");
   redMushroom.id = "redMushroom";
+  prizeCounter = 0;
   prizePlatform.appendChild(redMushroom);
+  gameObject.redMushroomExists = true;
 };
 
 const createPipe = () => {
@@ -452,10 +455,33 @@ const coinCollect = () => {
         gameObject.onPrize)
     ) {
       coin.remove();
-      coinCounter = 0;
+      prizeCounter = 0;
       currScore += 10;
       score.textContent = `SCORE:${currScore}`;
       gameObject.coinExists = false;
+    }
+  }
+};
+
+const redMushroomCollect = () => {
+  if (gameObject.redMushroomExists) {
+    if (
+      (hero.getBoundingClientRect().left <=
+        redMushroom.getBoundingClientRect().left &&
+        hero.getBoundingClientRect().right >=
+          redMushroom.getBoundingClientRect().left &&
+        gameObject.onPrize) ||
+      (hero.getBoundingClientRect().left <=
+        redMushroom.getBoundingClientRect().right &&
+        hero.getBoundingClientRect().right >=
+          redMushroom.getBoundingClientRect().right &&
+        gameObject.onPrize)
+    ) {
+      redMushroom.remove();
+      prizeCounter = 0;
+      currScore += 10;
+      score.textContent = `SCORE:${currScore}`;
+      gameObject.redMushroomExists = false;
     }
   }
 };
@@ -509,7 +535,12 @@ createPlatform();
 createPrizePlatform();
 //createCoin();
 
-if (gameObject.coinExists) console.log(coin.getBoundingClientRect());
+const prizeGenerator = () => {
+  randomPrizePicker = Math.random() * 2;
+  if (randomPrizePicker < 1) createCoin();
+  if (randomPrizePicker >= 1) createRedMushroom();
+};
+
 //createRedMushroom();
 pauseMenu();
 
@@ -562,15 +593,19 @@ const gameLoop = (timestamp) => {
     timer.textContent = `TIME: ${currTime}`;
     goombaCounter++;
     platformCounter++;
-    coinCounter++;
+    prizeCounter++;
     if (goombaCounter === 500) {
       createGoomba();
     }
     if (platformCounter === 1000) {
       createPlatform();
     }
-    if (coinCounter === 500 && !gameObject.coinExists) {
-      createCoin();
+    if (
+      prizeCounter === 500 &&
+      !gameObject.coinExists &&
+      !gameObject.redMushroomExists
+    ) {
+      prizeGenerator();
     }
     if (timer.textContent < 50) {
       timer.style.color = "red";
@@ -607,6 +642,10 @@ const gameLoop = (timestamp) => {
 
     if (gameObject.coinExists) {
       coinCollect();
+    }
+
+    if (gameObject.redMushroomExists) {
+      redMushroomCollect();
     }
   } else {
     pauseMenu();
