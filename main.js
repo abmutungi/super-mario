@@ -191,7 +191,7 @@ let gameObject = {
   enemyExists: false,
   platformExists: false,
   pause: false,
-  restart: true,
+  restart: false,
   onPlatform: false,
   onPrize: false,
   coinExists: false,
@@ -355,10 +355,15 @@ const createPipe = () => {
   game.appendChild(pipe);
 };
 
-const restart = (time) => {
-  time = 0;
-  hero.style.left = 0 + "px";
-  hero.style.bottom = 95 + "px";
+const restart = (score, lives, time, gametime, elem) => {
+  score = 100;
+  score.textContent = `SCORE: ${score}`;
+  lives = 3;
+  time = Math.trunc(120 - gametime / 10 / 10);
+  elem.style.left = 0 + "px";
+  elem.style.bottom = 95 + "px";
+  console.log("restart triggered");
+  gameObject.restart = false;
 };
 
 const pauseMenu = () => {
@@ -518,14 +523,16 @@ const control = (e) => {
   } else if (e.key === "p" || e.key === "P") {
     gameObject.pause = true;
   } else if (e.key === "c" || e.key === "C") {
-    game.lastChild.remove();
-    gameObject.pause = false;
-    paused = false;
+    if (gameObject.pause) {
+      game.lastChild.remove();
+      gameObject.pause = false;
+      paused = false;
+    }
+  } else if (e.key === "r" || e.key === "R") {
+    if (gameObject.pause) {
+      location.reload();
+    }
   }
-
-  // else if (e.key === "r" || e.key === "R") {
-  //     gameObject.restart = true;
-  // }
 };
 
 document.addEventListener("keydown", function (e) {
@@ -533,25 +540,12 @@ document.addEventListener("keydown", function (e) {
 });
 createPlatform();
 createPrizePlatform();
-//createCoin();
 
 const prizeGenerator = () => {
   randomPrizePicker = Math.random() * 2;
   if (randomPrizePicker < 1) createCoin();
   if (randomPrizePicker >= 1) createRedMushroom();
 };
-
-//createRedMushroom();
-pauseMenu();
-
-// const MAPcollisionCheck = () =>
-//     console.log("checking map surfaces ===> ",surfaces
-//         .map((each) => {
-//             hero.getBoundingClientRect().left >= each.left ||
-//                 hero.getBoundingClientRect().right <= each.right ||
-//                 hero.getBoundingClientRect().bottom < each.top;
-
-//       }).some((e) => e === true))
 
 const onplatformCheck = () => {
   if (
