@@ -7,13 +7,12 @@ let time = {
     total: 500,
 };
 let done = false;
-// let floor;
 let right = 0;
 let jump = 0;
 let bottom = 0;
 let gravity = 0.9;
-let hero = document.getElementById("mario");
-let enemy;
+let mario = document.getElementById("mario");
+let goomba;
 let game = document.getElementById("game");
 let background = document.querySelector(".sliding-background");
 let starttime;
@@ -23,7 +22,7 @@ let bowserCounter = 0;
 let goombaCounter = 0;
 let platformCounter = 0;
 let prizeCounter = 0;
-let enemyLeft = 0;
+let goombaLeft = 0;
 let fireBall;
 let fireLeft = 0;
 let bowser;
@@ -37,10 +36,10 @@ let timer;
 let currTime = 0;
 let score;
 let currScore = 0;
-let heroY = 0;
+let marioY = 0;
 let lives;
 let currLives = 3;
-let heroOpacity = 1;
+let marioOpacity = 1;
 let gameTime = 0;
 let pipe;
 let menu;
@@ -70,15 +69,15 @@ themeTune.volume = 0.5;
 fireSound.volume = 0.2;
 bowserMusic.volume = 0.2;
 const animateScript = () => {
-    hero.style.backgroundPosition = `-${position}px 0px`;
+    mario.style.backgroundPosition = `-${position}px 0px`;
     if (
         gameObject.onPlatform &&
-        hero.getBoundingClientRect().right - 50 >
+        mario.getBoundingClientRect().right - 50 >
             platform.getBoundingClientRect().right
     ) {
         gameObject.onPlatform = false;
-        hero.style.bottom = 95 + "px";
-        //hero.style.transform = `translateY(-95px)`
+        mario.style.bottom = 95 + "px";
+        //mario.style.transform = `translateY(-95px)`
     }
 };
 
@@ -89,7 +88,7 @@ const animateScript = () => {
 // };
 
 const marioGrow = (newScale) => {
-    hero.style.transform = hero.style.transform.replace(
+    mario.style.transform = mario.style.transform.replace(
         /scale\([0-9|\.]*\)/,
         "scale(" + newScale + ")"
     );
@@ -97,11 +96,11 @@ const marioGrow = (newScale) => {
 };
 
 const changeScale = (newScale) => {
-    let curTrans = hero.style.transform;
+    let curTrans = mario.style.transform;
     let newScaleString = "scale(" + newScale + ")";
     let regex = /scale\([0-9|\.]*\)/;
     let newTrans = curTrans.replace(regex, newScaleString);
-    hero.style.transform = newTrans;
+    mario.style.transform = newTrans;
     console.log("change scale");
 };
 
@@ -134,96 +133,97 @@ showLives();
 
 const moveRight = (timestamp) => {
     if (
-        hero.getBoundingClientRect().right <
+        mario.getBoundingClientRect().right <
         game.getBoundingClientRect().right - 35
     ) {
         right += 25;
-        hero.style.transform = `translateX(${right}px)`;
+        mario.style.transform = `translateX(${right}px)`;
+        console.log(mario.classList);
 
         //console.log("right");
-        // console.log("hero left, ", hero.getBoundingClientRect());
+        // console.log("mario left, ", mario.getBoundingClientRect());
         gameObject.right = false;
     } else if (
-        hero.getBoundingClientRect().right >=
+        mario.getBoundingClientRect().right >=
         game.getBoundingClientRect().right - 35
     ) {
-        hero.style.left -= 50 + "px";
+        mario.style.left -= 50 + "px";
     }
     if (
         gameObject.onPlatform &&
-        hero.getBoundingClientRect().right - 50 >
+        mario.getBoundingClientRect().right - 50 >
             platform.getBoundingClientRect().right
     ) {
         gameObject.onPlatform = false;
-        hero.style.bottom = 95 + "px";
-        //hero.style.transform = `translateY(-95px)`
+        mario.style.bottom = 95 + "px";
+        //mario.style.transform = `translateY(-95px)`
     }
     if (
         gameObject.onPrize &&
-        hero.getBoundingClientRect().right - 50 >
+        mario.getBoundingClientRect().right - 50 >
             prizePlatform.getBoundingClientRect().right &&
         !platformInlineCheck()
     ) {
         gameObject.onPrize = false;
-        hero.style.bottom = 95 + "px";
-        //hero.style.transform = `translateY(-95px)`
+        mario.style.bottom = 95 + "px";
+        //mario.style.transform = `translateY(-95px)`
     } else if (
         gameObject.onPrize &&
-        hero.getBoundingClientRect().right - 50 >
+        mario.getBoundingClientRect().right - 50 >
             prizePlatform.getBoundingClientRect().right &&
         platformInlineCheck()
     ) {
         gameObject.onPrize = false;
         gameObject.onPlatform = true;
-        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+        mario.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
     }
 };
 
 const moveLeft = () => {
     if (
-        hero.getBoundingClientRect().left >
+        mario.getBoundingClientRect().left >
         game.getBoundingClientRect().left + 35
     ) {
         right -= 25;
-        hero.style.transform = `translateX(${right}px) scaleX(-1)`;
+        mario.style.transform = `translateX(${right}px) scaleX(-1)`;
 
         //console.log("left");
-        //console.log(hero.getBoundingClientRect().left);
+        //console.log(mario.getBoundingClientRect().left);
         gameObject.left = false;
     } else if (
-        hero.getBoundingClientRect().left <
+        mario.getBoundingClientRect().left <
         game.getBoundingClientRect().left + 35
     ) {
-        hero.style.left += 50 + "px";
+        mario.style.left += 50 + "px";
     }
 
     if (
         gameObject.onPlatform &&
-        hero.getBoundingClientRect().left + 50 <
+        mario.getBoundingClientRect().left + 50 <
             platform.getBoundingClientRect().left
     ) {
         gameObject.onPlatform = false;
-        hero.style.bottom = 95 + "px";
+        mario.style.bottom = 95 + "px";
     }
 
     if (
         gameObject.onPrize &&
-        hero.getBoundingClientRect().left + 50 <
+        mario.getBoundingClientRect().left + 50 <
             prizePlatform.getBoundingClientRect().left &&
         !platformInlineCheck()
     ) {
         gameObject.onPrize = false;
-        hero.style.bottom = 95 + "px";
-        //hero.style.transform = `translateY(-95px)`
+        mario.style.bottom = 95 + "px";
+        //mario.style.transform = `translateY(-95px)`
     } else if (
         gameObject.onPrize &&
-        hero.getBoundingClientRect().left + 50 <
+        mario.getBoundingClientRect().left + 50 <
             prizePlatform.getBoundingClientRect().left &&
         platformInlineCheck()
     ) {
         gameObject.onPrize = false;
         gameObject.onPlatform = true;
-        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+        mario.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
     }
 };
 
@@ -232,7 +232,7 @@ let gameObject = {
     right: false,
     left: false,
     animate: true,
-    enemyExists: false,
+    goombaExists: false,
     platformExists: false,
     pause: false,
     restart: false,
@@ -253,7 +253,7 @@ const moveup = (now) => {
         time.elapsed = now - time.start;
         progress = time.elapsed / time.total;
         newPosition = progress * finalPosition;
-        hero.style.bottom = newPosition + 95 + "px";
+        mario.style.bottom = newPosition + 95 + "px";
         if (progress < 1 && !marioUnderPlatform()) {
             if (!done) {
                 jumpSound.play();
@@ -267,7 +267,7 @@ const moveup = (now) => {
             done = true;
         }
     } else if (gameObject.onPlatform) {
-        heroY = platform.getBoundingClientRect().top + 100;
+        marioY = platform.getBoundingClientRect().top + 100;
 
         console.log("----------------------------newPosition => ", newPosition);
         if (!time.start) time.start = now;
@@ -277,9 +277,9 @@ const moveup = (now) => {
         progress = time.elapsed / time.total;
         console.log("progress => ", progress);
         newPosition = progress * finalPosition;
-        console.log("heroY => ", heroY);
-        console.log("hero bottom => ", hero.style.bottom);
-        hero.style.bottom = heroY + newPosition + "px";
+        console.log("marioY => ", marioY);
+        console.log("mario bottom => ", mario.style.bottom);
+        mario.style.bottom = marioY + newPosition + "px";
         if (progress < 0.4) {
             if (!done) {
                 jumpSound.play();
@@ -301,32 +301,32 @@ const movedown = (now) => {
         gameObject.jump = false;
         //console.log("bool for collision", collisionCheck());
 
-        // console.log("mario when jumping", hero.getBoundingClientRect());
+        // console.log("mario when jumping", mario.getBoundingClientRect());
 
         if (!time.start) time.start = now;
         time.elapsed = now - time.start;
         progress = time.elapsed / time.total;
         newPosition = finalPosition * (1 - progress);
-        hero.style.bottom = newPosition + 95 + "px";
+        mario.style.bottom = newPosition + 95 + "px";
 
         if (progress < 1 && !onplatformCheck() && !onprizeCheck()) {
             requestAnimationFrame(movedown);
         } else {
             if (gameObject.onPlatform) {
-                hero.style.bottom =
+                mario.style.bottom =
                     platform.getBoundingClientRect().bottom - 70 + "px";
                 // } else if (gameObject.onPrize) {
-                //     hero.style.bottom =
+                //     mario.style.bottom =
                 //         prizePlatform.getBoundingClientRect().bottom - 70 + "px";
             }
             time.start = null;
         }
         done = false;
     } else if (gameObject.onPlatform) {
-        hero.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
-        console.log(hero.getBoundingClientRect().bottom);
+        mario.style.bottom = platform.getBoundingClientRect().bottom - 70 + "px";
+        console.log(mario.getBoundingClientRect().bottom);
     } else if (gameObject.onPrize) {
-        hero.style.bottom =
+        mario.style.bottom =
             prizePlatform.getBoundingClientRect().top + 120 + "px";
     }
 };
@@ -336,13 +336,13 @@ const newJump = () => {
 };
 
 const createGoomba = () => {
-    enemy = document.createElement("div");
-    enemy.setAttribute("id", "goomba");
-    enemy.style.left = 1200 + "px";
+    goomba = document.createElement("div");
+    goomba.setAttribute("id", "goomba");
+    goomba.style.left = 1200 + "px";
     goombaCounter = 0;
-    console.log("============== CREATING ENEMY =============");
-    game.appendChild(enemy);
-    gameObject.enemyExists = true;
+    console.log("============== CREATING goomba =============");
+    game.appendChild(goomba);
+    gameObject.goombaExists = true;
 };
 
 const createBowser = () => {
@@ -371,10 +371,10 @@ const breatheFire = () => {
 
     if (fireCollisionCheck() === true) {
         fireLeft = 0;
-        gameObject.enemyExists = false;
-        heroOpacity -= 0.25;
+        gameObject.goombaExists = false;
+        marioOpacity -= 0.25;
 
-        hero.style.opacity = heroOpacity;
+        mario.style.opacity = marioOpacity;
         currLives -= 1;
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
@@ -434,7 +434,7 @@ const movePlatform = () => {
     }
 
     // if (gameObject.onPlatform && !collisionCheck()){
-    //   hero.style.bottom = 95 + 'px';
+    //   mario.style.bottom = 95 + 'px';
     // }
 };
 const createPrizePlatform = () => {
@@ -492,45 +492,48 @@ const pauseMenu = () => {
 };
 
 const moveGoomba = () => {
-    enemyLeft -= 6;
+    goombaLeft -= 6;
 
-    enemy.style.transform = `translateX(${enemyLeft}px) scaleX(-1)`;
+    goomba.style.transform = `translateX(${goombaLeft}px) scaleX(-1)`;
     if (goombaCollisionCheck() === true) {
-        enemyLeft = 0;
-        enemy.remove();
-        gameObject.enemyExists = false;
-        heroOpacity -= 0.25;
-
-        hero.style.opacity = heroOpacity;
+        goombaLeft = 0;
+        goomba.remove();
+        gameObject.goombaExists = false;
+        marioOpacity -= 0.25;
+        if (mario.classList.length === 2){
+            mario.classList.toggle("normal")
+        }
+      
+        mario.style.opacity = marioOpacity;
         currLives -= 1;
         currScore -= 5;
         lives.textContent = `LIVES: ${currLives}`;
         score.textContent = `SCORE:${currScore}`;
     } else if (goombaKill()) {
-        enemyLeft = 0;
-        enemy.remove();
-        gameObject.enemyExists = false;
+        goombaLeft = 0;
+        goomba.remove();
+        gameObject.goombaExists = false;
         currScore += 10;
         score.textContent = `SCORE:${currScore}`;
     } else if (
-        enemy.getBoundingClientRect().left <
+        goomba.getBoundingClientRect().left <
             game.getBoundingClientRect().left &&
-        gameObject.enemyExists
+        gameObject.goombaExists
     ) {
-        enemyLeft = 0;
-        enemy.remove();
-        gameObject.enemyExists = false;
+        goombaLeft = 0;
+        goomba.remove();
+        gameObject.goombaExists = false;
     }
 };
 
 const goombaCollisionCheck = () => {
-    if (gameObject.enemyExists) {
+    if (gameObject.goombaExists) {
         if (
-            enemy.getBoundingClientRect().left <
-                hero.getBoundingClientRect().right &&
-            enemy.getBoundingClientRect().left >
-                hero.getBoundingClientRect().left &&
-            hero.getBoundingClientRect().bottom >= 614
+            goomba.getBoundingClientRect().left <
+                mario.getBoundingClientRect().right &&
+            goomba.getBoundingClientRect().left >
+                mario.getBoundingClientRect().left &&
+            mario.getBoundingClientRect().bottom >= 614
         ) {
             console.log("HIT");
             return true;
@@ -540,20 +543,20 @@ const goombaCollisionCheck = () => {
 };
 
 const goombaKill = () => {
-    if (gameObject.enemyExists) {
+    if (gameObject.goombaExists) {
         if (
-            (hero.getBoundingClientRect().left <=
-                enemy.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().right >=
-                    enemy.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().bottom >=
-                    enemy.getBoundingClientRect().top - 5) ||
-            (hero.getBoundingClientRect().left <=
-                enemy.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().right >=
-                    enemy.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().bottom >=
-                    enemy.getBoundingClientRect().top - 5)
+            (mario.getBoundingClientRect().left <=
+                goomba.getBoundingClientRect().left &&
+                mario.getBoundingClientRect().right >=
+                    goomba.getBoundingClientRect().left &&
+                mario.getBoundingClientRect().bottom >=
+                    goomba.getBoundingClientRect().top - 5) ||
+            (mario.getBoundingClientRect().left <=
+                goomba.getBoundingClientRect().right &&
+                mario.getBoundingClientRect().right >=
+                    goomba.getBoundingClientRect().right &&
+                mario.getBoundingClientRect().bottom >=
+                    goomba.getBoundingClientRect().top - 5)
         ) {
             goombaBump.play();
             console.log("GOOMBA KILL");
@@ -567,10 +570,10 @@ const fireCollisionCheck = () => {
     if (gameObject.bowserExists) {
         if (
             fireBall.getBoundingClientRect().left <
-                hero.getBoundingClientRect().right &&
+                mario.getBoundingClientRect().right &&
             fireBall.getBoundingClientRect().left >
-                hero.getBoundingClientRect().left &&
-            hero.getBoundingClientRect().bottom >= 614
+                mario.getBoundingClientRect().left &&
+            mario.getBoundingClientRect().bottom >= 614
         ) {
             console.log("mario flamesed");
             return true;
@@ -582,17 +585,17 @@ const fireCollisionCheck = () => {
 const bowserHit = () => {
     if (gameObject.bowserExists) {
         if (
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 bowser.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     bowser.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().bottom >=
+                mario.getBoundingClientRect().bottom >=
                     bowser.getBoundingClientRect().top - 5) ||
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 bowser.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     bowser.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().bottom >=
+                mario.getBoundingClientRect().bottom >=
                     bowser.getBoundingClientRect().top - 5)
         ) {
             bowserCounter += 1;
@@ -605,14 +608,14 @@ const bowserHit = () => {
 const coinCollect = () => {
     if (gameObject.coinExists) {
         if (
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 coin.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     coin.getBoundingClientRect().left &&
                 gameObject.onPrize) ||
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 coin.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     coin.getBoundingClientRect().right &&
                 gameObject.onPrize)
         ) {
@@ -629,24 +632,28 @@ const coinCollect = () => {
 const redMushroomCollect = () => {
     if (gameObject.redMushroomExists) {
         if (
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 redMushroom.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     redMushroom.getBoundingClientRect().left &&
                 gameObject.onPrize) ||
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 redMushroom.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     redMushroom.getBoundingClientRect().right &&
                 gameObject.onPrize)
         ) {
             redMushroom.remove();
             mushroomSound.play();
             prizeCounter = 0;
-            currScore += 10;
-            score.textContent = `SCORE:${currScore}`;
+            console.log(mario.classList);
+            if (mario.classList.length === 1){
+
+                mario.classList.toggle("normal");
+            }
+            console.log(mario.classList);
             // marioGrow(10);
-            changeScale(8);
+            //changeScale(8);
             gameObject.redMushroomExists = false;
         }
     }
@@ -655,14 +662,14 @@ const redMushroomCollect = () => {
 const greenMushroomCollect = () => {
     if (gameObject.greenMushroomExists) {
         if (
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 greenMushroom.getBoundingClientRect().left &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     greenMushroom.getBoundingClientRect().left &&
                 gameObject.onPrize) ||
-            (hero.getBoundingClientRect().left <=
+            (mario.getBoundingClientRect().left <=
                 greenMushroom.getBoundingClientRect().right &&
-                hero.getBoundingClientRect().right >=
+                mario.getBoundingClientRect().right >=
                     greenMushroom.getBoundingClientRect().right &&
                 gameObject.onPrize)
         ) {
@@ -670,7 +677,7 @@ const greenMushroomCollect = () => {
             mushroomSound.play();
             prizeCounter = 0;
             currLives += 1;
-            hero.style.opacity = 1;
+            mario.style.opacity = 1;
             lives.textContent = `LIVES: ${currLives}`;
             gameObject.greenMushroomExists = false;
         }
@@ -696,13 +703,13 @@ const platformInlineCheck = () => {
 
 const marioUnderPlatform = () => {
     if (
-        (hero.getBoundingClientRect().left <
+        (mario.getBoundingClientRect().left <
             platform.getBoundingClientRect().left &&
-            hero.getBoundingClientRect().right >=
+            mario.getBoundingClientRect().right >=
                 platform.getBoundingClientRect().left) ||
-        (hero.getBoundingClientRect().left <=
+        (mario.getBoundingClientRect().left <=
             platform.getBoundingClientRect().right &&
-            hero.getBoundingClientRect().right >
+            mario.getBoundingClientRect().right >
                 platform.getBoundingClientRect().right)
     ) {
         console.log("mario under platform");
@@ -713,12 +720,14 @@ const marioUnderPlatform = () => {
 };
 
 const control = (e) => {
+    e.preventDefault();
     if (position < 250) {
         position = position + 99.9;
     } else {
         position = 99.9;
     }
     if (e.key === " " || e.key === "ArrowUp") {
+        if (!gameObject.onPrize)
         gameObject.jump = true;
     } else if (e.key === "ArrowLeft") {
         gameObject.left = true;
@@ -735,6 +744,7 @@ const control = (e) => {
         }
     } else if (e.key === "r" || e.key === "R") {
         if (gameObject.pause) {
+           
             location.reload();
         }
     }
@@ -749,7 +759,7 @@ createPrizePlatform();
 const prizeGenerator = () => {
     randomPrizePicker = Math.random() * 3;
     if (randomPrizePicker < 1) createCoin();
-    if (randomPrizePicker >= 2) createRedMushroom();
+    if (randomPrizePicker >= 2 ) createRedMushroom();
     if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
     console.log("---*******-----", randomPrizePicker);
     prizeAppears.play();
@@ -757,11 +767,11 @@ const prizeGenerator = () => {
 
 const onplatformCheck = () => {
     if (
-        hero.getBoundingClientRect().left >=
+        mario.getBoundingClientRect().left >=
             platform.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().right <=
+        mario.getBoundingClientRect().right <=
             platform.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().bottom <
+        mario.getBoundingClientRect().bottom <
             platform.getBoundingClientRect().top
     ) {
         gameObject.onPlatform = true;
@@ -774,11 +784,11 @@ const onplatformCheck = () => {
 
 const onprizeCheck = () => {
     if (
-        hero.getBoundingClientRect().left >=
+        mario.getBoundingClientRect().left >=
             prizePlatform.getBoundingClientRect().left &&
-        hero.getBoundingClientRect().right <=
+        mario.getBoundingClientRect().right <=
             prizePlatform.getBoundingClientRect().right &&
-        hero.getBoundingClientRect().bottom <
+        mario.getBoundingClientRect().bottom <
             prizePlatform.getBoundingClientRect().top
     ) {
         gameObject.onPrize = true;
@@ -834,7 +844,7 @@ const gameLoop = (timestamp) => {
             timer.style.color = "red";
         }
         if (timer.textContent === 50.0) createPipe();
-        hero.style.backgroundPosition = `-${position}px 0px`;
+        mario.style.backgroundPosition = `-${position}px 0px`;
 
         if (gameObject.jump) {
             onplatformCheck();
@@ -854,7 +864,7 @@ const gameLoop = (timestamp) => {
             animateScript();
         }
 
-        if (gameObject.enemyExists) {
+        if (gameObject.goombaExists) {
             moveGoomba();
         }
 

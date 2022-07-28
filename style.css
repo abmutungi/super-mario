@@ -1,4 +1,14 @@
-#mario {
+#mario.small {
+  position: absolute;
+  left: 0px;
+  bottom: 95px;
+  height: 44px;
+  width: 24px;
+  opacity: 1;
+  background: url("img/small-mario.png") 0px 0px;
+}
+
+#mario.normal {
   position: absolute;
   left: 0px;
   bottom: 95px;
