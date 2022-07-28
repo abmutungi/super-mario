@@ -28,10 +28,9 @@
 
 #princess {
   position: absolute;
-  left: 1500px;
   bottom: 95px;
-  height: 44px;
-  width: 45.5px;
+  height: 120px;
+  width: 69px;
   background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_640.png') 0px 0px;
 }
 
@@ -56,10 +55,20 @@
 #redMushroom {
   position: relative;
   left: 100px;
-  bottom: 80px;
+  bottom: 40px;
   height: 40px;
   width: 50px;
   background: url("img/super-mario-bros-8-bit-mushroom-mario-background-1e204bf6ce54f1ee445dc8ec41d1eeb7.png")
+    0px 0px;
+}
+
+#greenMushroom {
+  position: relative;
+  left: 100px;
+  bottom: 40px;
+  height: 40px;
+  width: 50px;
+  background: url("img/clipart1474184.png")
     0px 0px;
 }
 /* 
@@ -97,6 +106,8 @@
   height: 85px;
   width: 85px;
 }
+
+
 
 #timer {
   position: absolute;
