@@ -57,13 +57,13 @@ let goombaBump = new Audio("sounds/smb_bump.wav");
 let jumpSound = new Audio("sounds/smb_jump-small.wav");
 let pauseSound = new Audio("sounds/smb_pause.wav");
 let themeTune = new Audio(
-    "sounds/marioT.mp3"
+    "sounds/marioT2.mp3"
 );
 let prizeAppears = new Audio("sounds/smb_powerup_appears.wav");
 let mushroomSound = new Audio("sounds/smb_powerup.wav");
 let marioRomano = new Audio("sounds/Mario (Here We Go!).mp3");
 let bowserMusic = new Audio(
-    "sounds/marioT2.mp3"
+    "sounds/marioT.mp3"
 );
 
 themeTune.volume = 0.5;
