@@ -423,7 +423,14 @@ const marioBreatheFire = () => {
         marioFireBall.style.transform = `translateX(${marioFireBallLeft}px) scaleX(-1)`;
         fireSound.play();
 
-        if (marioFireBall.getBoundingClientRect().left >
+        if (goombaFireCollisionCheck()){
+            marioFireBallLeft = 0;
+            marioFireBall.remove();
+            goombaLeft = 0;
+        goomba.remove();
+        gameObject.goombaExists = false;
+
+        }else if (marioFireBall.getBoundingClientRect().left >
         game.getBoundingClientRect().right){
             marioFireBallLeft = 0;
             marioFireBall.remove()
@@ -616,6 +623,22 @@ const fireCollisionCheck = () => {
     }
     return false;
 };
+
+const goombaFireCollisionCheck = () => {
+    if (gameObject.marioShooting){
+        if (
+            marioFireBall.getBoundingClientRect().left <
+                goomba.getBoundingClientRect().left &&
+            marioFireBall.getBoundingClientRect().right >
+                goomba.getBoundingClientRect().left
+        ) {
+            console.log("mario flamesed");
+            return true;
+        }
+        return false; 
+    }
+    }
+
 
 const bowserHit = () => {
     if (gameObject.bowserExists) {
