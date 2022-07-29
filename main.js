@@ -27,6 +27,7 @@ let fireBall;
 let fireLeft = 0;
 let marioFireBall;
 let marioFireBallLeft = 0;
+let marioFireCounter = 10;
 let bowser;
 let platform;
 let princess;
@@ -58,9 +59,7 @@ let fireSound = new Audio("sounds/smb_bowserfire.wav");
 let goombaBump = new Audio("sounds/smb_bump.wav");
 let jumpSound = new Audio("sounds/smb_jump-small.wav");
 let pauseSound = new Audio("sounds/smb_pause.wav");
-let themeTune = new Audio(
-    "sounds/marioT2.mp3"
-);
+let themeTune = new Audio("sounds/marioT2.mp3");
 let prizeAppears = new Audio("sounds/smb_powerup_appears.wav");
 let mushroomSound = new Audio("sounds/smb_powerup.wav");
 let marioRomano = new Audio("sounds/Mario (Here We Go!).mp3");
@@ -374,8 +373,8 @@ const createMarioFire = () => {
     marioFireBall = document.createElement("div");
     marioFireBall.id = "marioFire";
     marioFireBall.style.left = mario.style.left + 10 + "px" ;
-    marioFireBall.style.bottom = 0 + "px"
-    gameObject.marioCanShoot = true;
+    marioFireBall.style.bottom = 0 + "px" 
+    gameObject.marioCanShoot = true;   
     mario.appendChild(marioFireBall);
 
 
@@ -416,6 +415,7 @@ const breatheFire = () => {
 };
 
 const marioBreatheFire = () => {
+   
     if (gameObject.marioShooting){
 
         marioFireBallLeft += 20;
@@ -429,16 +429,28 @@ const marioBreatheFire = () => {
             goombaLeft = 0;
         goomba.remove();
         gameObject.goombaExists = false;
-        // currScore += 10;
-        // score.textContent = `SCORE:${currScore}`;
-        gameObject.marioShooting = false;
-            createMarioFire();
+        
+            gameObject.marioShooting = false;
+            if (marioFireCounter > 0) {
+                createMarioFire();
+            }else{
+                gameObject.marioCanShoot = false;
+            }
+        
         }else if (marioFireBall.getBoundingClientRect().left >
         game.getBoundingClientRect().right || marioFireBall.getBoundingClientRect().left < game.getBoundingClientRect().left){
             marioFireBallLeft = 0;
             marioFireBall.remove()
             gameObject.marioShooting = false;
-            createMarioFire();
+            
+               if (marioFireCounter > 0){
+
+                   createMarioFire();
+               }else{
+                gameObject.marioCanShoot = false;
+               }
+           
+            
             
         }
         
@@ -764,12 +776,11 @@ const fireFlowerCollect = () => {
             fireFlower.remove();
             mushroomSound.play();
             prizeCounter = 0;
+            marioFireCounter = 10;
             createMarioFire();
             gameObject.fireFlowerExists = false;
-            // currLives += 1;
-            // mario.style.opacity = 1;
-            // lives.textContent = `LIVES: ${currLives}`;
-            // gameObject.greenMushroomExists = false;
+            
+            
         } 
     }
 }
@@ -842,12 +853,18 @@ const control = (e) => {
             location.reload();
         }
     }else if (e.key === "f" || e.key === "F"){
-        if (gameObject.marioCanShoot){
-            gameObject.marioShooting = true;
+        if (gameObject.marioCanShoot && !gameObject.marioShooting){
+            
+                
+                gameObject.marioShooting = true;
+                marioFireCounter --
+                console.log("marioFireCounter => ",marioFireCounter);
+                
            
+            }
         }
-    }
-};
+    };
+
 
 document.addEventListener("keydown", function (e) {
     control(e);
@@ -857,10 +874,10 @@ createPrizePlatform();
 
 const prizeGenerator = () => {
     randomPrizePicker = Math.random() * 4;   
-    if (randomPrizePicker < 1) createCoin();
-    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    if (randomPrizePicker < 1 ) createCoin();
+    if (randomPrizePicker >= 1 && randomPrizePicker < 2 ) createGreenMushroom();
     if (randomPrizePicker >= 2 && randomPrizePicker < 3 ) createRedMushroom();
-    if (randomPrizePicker >= 3) createFireFlower();
+    if (randomPrizePicker >= 3 && !gameObject.marioCanShoot) createFireFlower();
     console.log("---*******-----", randomPrizePicker);
     prizeAppears.play();
 };
@@ -900,6 +917,7 @@ const onprizeCheck = () => {
 };
 
 const gameLoop = (timestamp) => {
+    themeTune.play();
     if (!gameObject.pause) {
         gameTime++;
         currTime = Math.trunc(120 - gameTime / 10 / 10);
@@ -909,7 +927,7 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
 
         if (
-            currScore === 10 &&
+            currScore > 50 &&
             gameTime > 60 &&
             !gameObject.bowserExists &&
             bowserCounter < 3
@@ -936,7 +954,9 @@ const gameLoop = (timestamp) => {
             prizeCounter === 500 &&
             !gameObject.coinExists &&
             !gameObject.redMushroomExists &&
-            !gameObject.greenMushroomExists
+            !gameObject.greenMushroomExists &&
+            !gameObject.fireFlowerExists
+
         ) {
             prizeGenerator();
         }
@@ -1001,7 +1021,7 @@ const gameLoop = (timestamp) => {
         if (gameObject.marioShooting){
             marioBreatheFire();
         }
-        themeTune.play();
+        
     } else {
         pauseMenu();
     }
