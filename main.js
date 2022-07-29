@@ -856,13 +856,11 @@ createPlatform();
 createPrizePlatform();
 
 const prizeGenerator = () => {
-    randomPrizePicker = Math.random() * 4;
-    if (randomPrizePicker < 1) createFireFlower();
-    if (randomPrizePicker >= 2 ) createFireFlower();
-    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createFireFlower();
-    // if (randomPrizePicker < 1) createCoin();
-    // if (randomPrizePicker >= 2 ) createRedMushroom();
-    // if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    randomPrizePicker = Math.random() * 4;   
+    if (randomPrizePicker < 1) createCoin();
+    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    if (randomPrizePicker >= 2 && randomPrizePicker < 3 ) createRedMushroom();
+    if (randomPrizePicker >= 3) createFireFlower();
     console.log("---*******-----", randomPrizePicker);
     prizeAppears.play();
 };
