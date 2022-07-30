@@ -391,11 +391,11 @@ const breatheFire = () => {
         fireBall.remove();
         bowserFireCounter = 0;
         createBowserFire();
-        gameObject.goombaExists = false;
+        //gameObject.goombaExists = false;
         gameObject.bowserShooting = false;
-        marioOpacity -= 0.25;
-
-        mario.style.opacity = marioOpacity;
+        goombaBump.play();
+        // marioOpacity -= 0.25;
+        // if (currLives > 1 && mario.style.opacity > 0.25) mario.style.opacity = marioOpacity;
         currLives -= 1;
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
@@ -958,7 +958,7 @@ const gameLoop = (timestamp) => {
 
                 
             createPrincess();
-            gameObject.bowserShooting = true;
+            //gameObject.bowserShooting = true;
             
             //console.log("change background");
             //background.style.animation = "slide 1s linear infinite";            
@@ -968,7 +968,7 @@ const gameLoop = (timestamp) => {
             themeTune.volume = 0;
             bowserMusic.play();
             bowserFireCounter++
-            if (bowserFireCounter > 100) bowserFireCounter =0;
+            //if (bowserFireCounter > 100) bowserFireCounter =0;
             if (gameObject.bowserExists && bowserFireCounter === 100) gameObject.bowserShooting = true;
         console.log("boswerFireCounter => ", bowserFireCounter);
 
