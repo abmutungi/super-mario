@@ -995,7 +995,7 @@ const gameLoop = (timestamp) => {
             bowserMusic.play();
             bowserFireCounter++
             //if (bowserFireCounter > 100) bowserFireCounter =0;
-            if (gameObject.bowserExists && bowserFireCounter === 100) gameObject.bowserShooting = true;
+            if (gameObject.bowserExists && bowserFireCounter === 100 && bowserStrength > 0) gameObject.bowserShooting = true;
         //console.log("boswerFireCounter => ", bowserFireCounter);
 
         }
