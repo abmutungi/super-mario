@@ -30,6 +30,7 @@ let marioFireBall;
 let marioFireBallLeft = 0;
 let marioFireCounter = 10;
 let bowser;
+let bowserStrength = 100;
 let platform;
 let princess;
 let platformLeft = 0;
@@ -45,6 +46,7 @@ let marioY = 0;
 let lives;
 let currLives = 3;
 let marioOpacity = 1;
+let bowserOpacity = 1;
 let gameTime = 0;
 let pipe;
 let menu;
@@ -135,7 +137,7 @@ const moveRight = (timestamp) => {
     ) {
         right += 25;
         mario.style.transform = `translateX(${right}px)`;
-        console.log(mario.classList);
+        //console.log(mario.classList);
 
         //console.log("right");
         // console.log("mario left, ", mario.getBoundingClientRect());
@@ -391,11 +393,11 @@ const breatheFire = () => {
         fireBall.remove();
         bowserFireCounter = 0;
         createBowserFire();
-        //gameObject.goombaExists = false;
+        
         gameObject.bowserShooting = false;
         goombaBump.play();
-        // marioOpacity -= 0.25;
-        // if (currLives > 1 && mario.style.opacity > 0.25) mario.style.opacity = marioOpacity;
+        marioOpacity -= 0.25;
+        if (currLives > 1 && mario.style.opacity > 0.25) mario.style.opacity = marioOpacity;
         currLives -= 1;
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
@@ -444,7 +446,31 @@ const marioBreatheFire = () => {
                 
             }
         
-        }else if (marioFireBall.getBoundingClientRect().left >
+        }
+        if (bowserFireCollisionCheck()){
+            marioFireBallLeft = 0;
+            marioFireBall.remove();       
+            gameObject.marioShooting = false;
+            
+            bowserStrength -= 20;
+            console.log("bowserStrength ==> ",bowserStrength);
+            if (bowserStrength === 0){
+                bowser.remove()
+                fireBall.remove()
+                gameObject.bowserShooting = false;
+                //gameObject.bowserExists = false;
+            }
+            if (marioFireCounter > 0) {
+                createMarioFire();
+            }else{
+                gameObject.marioCanShoot = false;
+                
+            }
+
+        
+        
+        }
+        if (marioFireBall.getBoundingClientRect().left >
         game.getBoundingClientRect().right || marioFireBall.getBoundingClientRect().left < game.getBoundingClientRect().left){
             marioFireBallLeft = 0;
             marioFireBall.remove()
@@ -970,7 +996,7 @@ const gameLoop = (timestamp) => {
             bowserFireCounter++
             //if (bowserFireCounter > 100) bowserFireCounter =0;
             if (gameObject.bowserExists && bowserFireCounter === 100) gameObject.bowserShooting = true;
-        console.log("boswerFireCounter => ", bowserFireCounter);
+        //console.log("boswerFireCounter => ", bowserFireCounter);
 
         }
 
