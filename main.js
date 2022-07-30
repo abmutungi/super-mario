@@ -250,7 +250,7 @@ let gameObject = {
 };
 
 const moveup = (now) => {
-    // if (marioUnderPlatform()) 
+    
     if (gameObject.jump && !gameObject.onPlatform && !gameObject.onPrize) {
         //isJumping = true
 
@@ -259,7 +259,7 @@ const moveup = (now) => {
         progress = time.elapsed / time.total;
         newPosition = progress * finalPosition;
         mario.style.bottom = newPosition + 95 + "px";
-        if (progress < 1 && !marioUnderPlatform()) {
+        if (progress < 1 ) {
             if (!done) {
                 jumpSound.play();
                 requestAnimationFrame(moveup);
@@ -799,24 +799,6 @@ const platformInlineCheck = () => {
         console.log("platforms are in line");
         return true;
     }
-    return false;
-};
-
-const marioUnderPlatform = () => {
-    if (
-        (mario.getBoundingClientRect().left <
-            platform.getBoundingClientRect().left &&
-            mario.getBoundingClientRect().right >=
-                platform.getBoundingClientRect().left) ||
-        (mario.getBoundingClientRect().left <=
-            platform.getBoundingClientRect().right &&
-            mario.getBoundingClientRect().right >
-                platform.getBoundingClientRect().right)
-    ) {
-        console.log("mario under platform");
-        return true;
-    }
-    console.log("mario walking");
     return false;
 };
 
