@@ -244,6 +244,7 @@ let gameObject = {
     marioCanShoot: false,
     marioShooting: false,
     bowserExists: false,
+    princessExists: false,
     bowserShooting: false,
 };
 
@@ -351,7 +352,7 @@ const createBowser = () => {
 
         bowser = document.createElement("div");
         bowser.setAttribute("id", "bowser");
-        bowser.style.left = 1000 + "px";
+        bowser.style.left = 950 + "px";
         
         console.log("============== CREATING BOWSER =============");
         game.appendChild(bowser);
@@ -396,8 +397,8 @@ const breatheFire = () => {
         
         gameObject.bowserShooting = false;
         goombaBump.play();
-        marioOpacity -= 0.25;
-        if (currLives > 1 && mario.style.opacity > 0.25) mario.style.opacity = marioOpacity;
+        // marioOpacity -= 0.25;
+        // if (currLives > 1 && mario.style.opacity > 0.25) mario.style.opacity = marioOpacity;
         currLives -= 1;
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
@@ -496,8 +497,9 @@ const createPrincess = () => {
     princess = document.createElement("div");
     princess.setAttribute("id", "princess");
     console.log("creating princess ===> ");
-    princess.style.left = 850 + "px";
+    princess.style.left = 1100 + "px";
     game.appendChild(princess);
+    gameObject.princessExists = true;
 };
 
 const createPlatform = () => {
@@ -811,6 +813,24 @@ const greenMushroomCollect = () => {
     }
 };
 
+const princessSavedCheck = () => {
+    if (!gameObject.bowserShooting && gameObject.princessExists){
+        
+            if (
+                princess.getBoundingClientRect().left <
+                    mario.getBoundingClientRect().right &&
+                princess.getBoundingClientRect().left >
+                    mario.getBoundingClientRect().left &&
+                mario.getBoundingClientRect().bottom >= 614
+            ) {
+                console.log("SAVED PRINCESS!!!!");
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 const fireFlowerCollect = () => {
     if (gameObject.fireFlowerExists){
         if (
@@ -974,8 +994,8 @@ const gameLoop = (timestamp) => {
         
 
         if (
-            currScore > 0 &&
-            gameTime > 60 &&
+            currScore > 5 &&
+            
             !gameObject.bowserExists
             
         ) {
@@ -1085,8 +1105,17 @@ const gameLoop = (timestamp) => {
         pauseMenu();
     }
 
-    if (currTime > 0 && currLives > 0) {
+    if (currTime > 0 && currLives > 0 && !princessSavedCheck()) {
         requestAnimationFrame(gameLoop);
+    }else if (princessSavedCheck()){
+        alert("YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!")
+        location.reload();
+    }else if (currTime === 0){
+        alert("YOU RAN OUT OF TIME AND LOST THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!")
+        location.reload();
+    }else if (currLives === 0){
+        alert("YOU RAN OUT OF LIVES AND LOST THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!")
+        location.reload();
     }
 };
 
