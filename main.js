@@ -25,6 +25,7 @@ let prizeCounter = 0;
 let goombaLeft = 0;
 let fireBall;
 let fireLeft = 0;
+let bowserFireCounter = 0;
 let marioFireBall;
 let marioFireBallLeft = 0;
 let marioFireCounter = 10;
@@ -358,7 +359,7 @@ const createBowser = () => {
 const createBowserFire = () => {
     fireBall = document.createElement("div");
     fireBall.setAttribute("id", "fire");
-    fireBall.style.left = 700 + "px";
+    fireBall.style.left = 1000 + "px";
     console.log("============== BOWSER SHOOTS FIRE =============");
     game.appendChild(fireBall);
 };
@@ -369,14 +370,14 @@ const createMarioFire = () => {
     marioFireBall.id = "marioFire";
     marioFireBall.style.left = mario.style.left + 10 + "px" ;
     marioFireBall.style.bottom = -5 + "px" 
-    gameObject.marioCanShoot = true;   
+    //gameObject.marioCanShoot = true;   
     mario.appendChild(marioFireBall);
 
 
 }
 
 const breatheFire = () => {
-    fireLeft -= 20;
+    fireLeft -= 50;
 
     fireBall.style.transform = `translateX(${fireLeft}px) scaleX(-1)`;
     fireSound.play();
@@ -391,6 +392,7 @@ const breatheFire = () => {
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
         score.textContent = `SCORE:${currScore}`;
+        bowserFireCounter = 0;
     
     } else if (
         fireBall.getBoundingClientRect().left <
@@ -399,7 +401,8 @@ const breatheFire = () => {
     ) {
         fireLeft = 0;
         fireBall.remove();
-        gameObject.bowserExists = false;
+       bowserFireCounter = 0;
+        //gameObject.bowserExists = false;
     }
 };
 
@@ -424,6 +427,7 @@ const marioBreatheFire = () => {
                 createMarioFire();
             }else{
                 gameObject.marioCanShoot = false;
+                
             }
         
         }else if (marioFireBall.getBoundingClientRect().left >
@@ -437,6 +441,7 @@ const marioBreatheFire = () => {
                    createMarioFire();
                }else{
                 gameObject.marioCanShoot = false;
+                
                }
            
             
@@ -491,7 +496,7 @@ const movePlatform = () => {
 const createPrizePlatform = () => {
     prizePlatform = document.createElement("div");
     prizePlatform.id = "prizeBrick";
-    prizePlatform.style.left = Math.random() * 1200 + "px";
+    prizePlatform.style.left = Math.random() * 1000 + "px";
     game.appendChild(prizePlatform);
 };
 const createCoin = () => {
@@ -784,6 +789,7 @@ const fireFlowerCollect = () => {
             mushroomSound.play();
             prizeCounter = 0;
             marioFireCounter = 10;
+            gameObject.marioCanShoot = true;
             createMarioFire();
             gameObject.fireFlowerExists = false;
             
@@ -847,6 +853,7 @@ const control = (e) => {
                 
                 gameObject.marioShooting = true;
                 marioFireCounter --
+                
                 console.log("marioFireCounter => ",marioFireCounter);
                 
            
@@ -866,7 +873,12 @@ const prizeGenerator = () => {
     if (randomPrizePicker < 1 ) createCoin();
     if (randomPrizePicker >= 1 && randomPrizePicker < 2 ) createGreenMushroom();
     if (randomPrizePicker >= 2 && randomPrizePicker < 3 ) createRedMushroom();
-    if (randomPrizePicker >= 3 && !gameObject.marioCanShoot) createFireFlower();
+    if (randomPrizePicker >= 3 && !gameObject.marioCanShoot) {
+        createFireFlower();
+        prizeCounter = 0;
+    }else if (randomPrizePicker >= 3 && gameObject.marioCanShoot){
+        prizeCounter = 0;
+    }
     console.log("randomPrizePicker => ", randomPrizePicker);
     console.log("coin check => ", gameObject.coinExists);
     console.log("green mush check => ", gameObject.greenMushroomExists);
@@ -918,6 +930,7 @@ const gameLoop = (timestamp) => {
         goombaCounter++;
         platformCounter++;
         prizeCounter++;
+        
 
         if (
             currScore > 0 &&
@@ -926,13 +939,14 @@ const gameLoop = (timestamp) => {
             
         ) {
             createBowser();
-            createBowserFire();
+           createBowserFire();
             createPrincess();
+            bowserFireCounter++;
             //console.log("change background");
-            //background.style.animation = "slide 1s linear infinite";
-
-            
+            //background.style.animation = "slide 1s linear infinite";            
         }
+
+        
         if (gameTime === 116) {
             marioRomano.play();
         }
@@ -952,6 +966,11 @@ const gameLoop = (timestamp) => {
 
         ) {
             prizeGenerator();
+            console.log("randomPrizePicker => ", randomPrizePicker);
+    console.log("coin check => ", gameObject.coinExists);
+    console.log("green mush check => ", gameObject.greenMushroomExists);
+    console.log("red mush check => ", gameObject.redMushroomExists);
+    console.log("fire flower check => ", gameObject.fireFlowerExists);
         }
         
 
@@ -980,7 +999,10 @@ const gameLoop = (timestamp) => {
         if (gameObject.bowserExists) {
             themeTune.volume = 0;
             bowserMusic.play();
-            breatheFire();
+            if (bowserFireCounter === 200){
+
+                breatheFire();
+            }
         }
 
         if (gameObject.platformExists) {
