@@ -57,11 +57,9 @@
 
 #marioFire {
   position: relative;
-  
-    
   height: 40px;
   width: 35px;
-  background: url("img/fire.png") 0px 0px;
+  background: url("img/imgbin_super-mario-kart-super-nintendo-entertainment-system-mario-series-png.png") 0px 0px;
 }
 
 #coin {
@@ -115,17 +113,17 @@
   position: absolute;
   left: 400px;
   bottom: 295px;
-  height: 50px;
-  width: 200px;
-  background: url("img/Bricks.png") 0px 0px;
+  height: 58px;
+  width: 150px;
+  background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png") 0px 0px;
 }
 
 #prizeBrick {
   position: absolute;
   bottom: 365px;
-  height: 50px;
-  width: 200px;
-  background: url("img/Bricks.png") 0px 0px;
+  height: 58px;
+  width: 300px;
+  background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png") 0px 0px;
 }
 
 #greenPipe {
