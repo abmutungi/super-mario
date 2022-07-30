@@ -869,16 +869,14 @@ createPlatform();
 createPrizePlatform();
 
 const prizeGenerator = () => {
-    randomPrizePicker = Math.random() * 4;   
+    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 4;   
+    
+    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 3;
     if (randomPrizePicker < 1 ) createCoin();
     if (randomPrizePicker >= 1 && randomPrizePicker < 2 ) createGreenMushroom();
     if (randomPrizePicker >= 2 && randomPrizePicker < 3 ) createRedMushroom();
-    if (randomPrizePicker >= 3 && !gameObject.marioCanShoot) {
-        createFireFlower();
-        prizeCounter = 0;
-    }else if (randomPrizePicker >= 3 && gameObject.marioCanShoot){
-        prizeCounter = 0;
-    }
+    if (randomPrizePicker >= 3)  createFireFlower();
+    
     console.log("randomPrizePicker => ", randomPrizePicker);
     console.log("coin check => ", gameObject.coinExists);
     console.log("green mush check => ", gameObject.greenMushroomExists);
