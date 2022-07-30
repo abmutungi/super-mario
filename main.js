@@ -242,6 +242,7 @@ let gameObject = {
     marioCanShoot: false,
     marioShooting: false,
     bowserExists: false,
+    bowserShooting: false,
 };
 
 const moveup = (now) => {
@@ -377,14 +378,21 @@ const createMarioFire = () => {
 }
 
 const breatheFire = () => {
-    fireLeft -= 50;
+    if (gameObject.bowserShooting){
+
+    
+    fireLeft -= 20;
 
     fireBall.style.transform = `translateX(${fireLeft}px) scaleX(-1)`;
     fireSound.play();
 
     if (fireCollisionCheck() === true) {
         fireLeft = 0;
+        fireBall.remove();
+        bowserFireCounter = 0;
+        createBowserFire();
         gameObject.goombaExists = false;
+        gameObject.bowserShooting = false;
         marioOpacity -= 0.25;
 
         mario.style.opacity = marioOpacity;
@@ -392,18 +400,22 @@ const breatheFire = () => {
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
         score.textContent = `SCORE:${currScore}`;
-        bowserFireCounter = 0;
+         
     
     } else if (
         fireBall.getBoundingClientRect().left <
-            game.getBoundingClientRect().left &&
-        gameObject.bowserExists
+            game.getBoundingClientRect().left 
+        
     ) {
         fireLeft = 0;
+        bowserFireCounter = 0;
         fireBall.remove();
-       bowserFireCounter = 0;
+        createBowserFire();
+        gameObject.bowserShooting = false;
+       
         //gameObject.bowserExists = false;
     }
+}
 };
 
 const marioBreatheFire = () => {
@@ -421,6 +433,8 @@ const marioBreatheFire = () => {
             goombaLeft = 0;
         goomba.remove();
         gameObject.goombaExists = false;
+        currScore += 10;
+        score.textContent = `SCORE:${currScore}`;
         
             gameObject.marioShooting = false;
             if (marioFireCounter > 0) {
@@ -928,6 +942,9 @@ const gameLoop = (timestamp) => {
         goombaCounter++;
         platformCounter++;
         prizeCounter++;
+        //bowserFireCounter++
+        
+        
         
 
         if (
@@ -937,11 +954,28 @@ const gameLoop = (timestamp) => {
             
         ) {
             createBowser();
-           createBowserFire();
+            createBowserFire();
+
+                
             createPrincess();
-            bowserFireCounter++;
+            gameObject.bowserShooting = true;
+            
             //console.log("change background");
             //background.style.animation = "slide 1s linear infinite";            
+        }
+
+        if (gameObject.bowserExists) {
+            themeTune.volume = 0;
+            bowserMusic.play();
+            bowserFireCounter++
+            if (bowserFireCounter > 100) bowserFireCounter =0;
+            if (gameObject.bowserExists && bowserFireCounter === 100) gameObject.bowserShooting = true;
+        console.log("boswerFireCounter => ", bowserFireCounter);
+
+        }
+
+        if (gameObject.bowserShooting){
+            breatheFire();
         }
 
         
@@ -964,11 +998,7 @@ const gameLoop = (timestamp) => {
 
         ) {
             prizeGenerator();
-            console.log("randomPrizePicker => ", randomPrizePicker);
-    console.log("coin check => ", gameObject.coinExists);
-    console.log("green mush check => ", gameObject.greenMushroomExists);
-    console.log("red mush check => ", gameObject.redMushroomExists);
-    console.log("fire flower check => ", gameObject.fireFlowerExists);
+           
         }
         
 
@@ -994,14 +1024,8 @@ const gameLoop = (timestamp) => {
             moveGoomba();
         }
 
-        if (gameObject.bowserExists) {
-            themeTune.volume = 0;
-            bowserMusic.play();
-            if (bowserFireCounter === 200){
+        
 
-                breatheFire();
-            }
-        }
 
         if (gameObject.platformExists) {
             movePlatform();
