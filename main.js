@@ -83,12 +83,6 @@ const animateScript = () => {
     }
 };
 
-// const createFloor = () => {
-//     floor = document.createElement("div");
-//     floor.setAttribute("id", "floor");
-//     game.appendChild(floor);
-// };
-
 const marioGrow = (newScale) => {
     mario.style.transform = mario.style.transform.replace(
         /scale\([0-9|\.]*\)/,
@@ -131,7 +125,7 @@ const showLives = () => {
 showTimer();
 showScore();
 showLives();
-//createFloor();
+
 
 const moveRight = (timestamp) => {
     if (
@@ -304,9 +298,7 @@ const moveup = (now) => {
 const movedown = (now) => {
     if (!gameObject.onPlatform && !gameObject.onPrize) {
         gameObject.jump = false;
-        //console.log("bool for collision", collisionCheck());
-
-        // console.log("mario when jumping", mario.getBoundingClientRect());
+       
 
         if (!time.start) time.start = now;
         time.elapsed = now - time.start;
@@ -351,16 +343,19 @@ const createGoomba = () => {
 };
 
 const createBowser = () => {
-    bowser = document.createElement("div");
-    bowser.setAttribute("id", "bowser");
-    bowser.style.left = 700 + "px";
-    bowserCounter = 0;
-    console.log("============== CREATING BOWSER =============");
-    game.appendChild(bowser);
-    gameObject.bowserExists = true;
+    if (!gameObject.bowserExists){
+
+        bowser = document.createElement("div");
+        bowser.setAttribute("id", "bowser");
+        bowser.style.left = 1000 + "px";
+        
+        console.log("============== CREATING BOWSER =============");
+        game.appendChild(bowser);
+        gameObject.bowserExists = true;
+    }
 };
 
-const createFire = () => {
+const createBowserFire = () => {
     fireBall = document.createElement("div");
     fireBall.setAttribute("id", "fire");
     fireBall.style.left = 700 + "px";
@@ -396,13 +391,7 @@ const breatheFire = () => {
         currScore -= 10;
         lives.textContent = `LIVES: ${currLives}`;
         score.textContent = `SCORE:${currScore}`;
-    } else if (bowserCounter === 2) {
-        fireLeft = 0;
-        fireBall.remove();
-        bowser.remove();
-        gameObject.bowserExists = false;
-        currScore += 50;
-        score.textContent = `SCORE:${currScore}`;
+    
     } else if (
         fireBall.getBoundingClientRect().left <
             game.getBoundingClientRect().left &&
@@ -461,6 +450,7 @@ const marioBreatheFire = () => {
 const createPrincess = () => {
     princess = document.createElement("div");
     princess.setAttribute("id", "princess");
+    console.log("creating princess ===> ");
     princess.style.left = 850 + "px";
     game.appendChild(princess);
 };
@@ -582,6 +572,7 @@ const moveGoomba = () => {
         goomba.remove();
         gameObject.goombaExists = false;
     }
+    
 };
 
 const goombaCollisionCheck = () => {
@@ -649,12 +640,28 @@ const goombaFireCollisionCheck = () => {
                 goomba.getBoundingClientRect().left &&
                 marioFireBall.getBoundingClientRect().bottom > goomba.getBoundingClientRect().top
         ) {
-            console.log("mario flamesed");
+            console.log("goomba flamesed");
             return true;
         }
         return false; 
     }
     }
+
+const bowserFireCollisionCheck  = () => {
+    if (gameObject.marioShooting && gameObject.bowserExists){
+        if (
+            marioFireBall.getBoundingClientRect().left <
+                bowser.getBoundingClientRect().left &&
+            marioFireBall.getBoundingClientRect().right >
+                bowser.getBoundingClientRect().left &&
+                marioFireBall.getBoundingClientRect().bottom > bowser.getBoundingClientRect().top
+        ) {
+            console.log("bowser flamesed");
+            return true;
+        }
+        return false; 
+    }
+}
 
 
 const bowserHit = () => {
@@ -673,7 +680,7 @@ const bowserHit = () => {
                 mario.getBoundingClientRect().bottom >=
                     bowser.getBoundingClientRect().top - 5)
         ) {
-            bowserCounter += 1;
+            
             console.log("Bowser Hit", bowserCounter);
         }
         return false;
@@ -860,7 +867,11 @@ const prizeGenerator = () => {
     if (randomPrizePicker >= 1 && randomPrizePicker < 2 ) createGreenMushroom();
     if (randomPrizePicker >= 2 && randomPrizePicker < 3 ) createRedMushroom();
     if (randomPrizePicker >= 3 && !gameObject.marioCanShoot) createFireFlower();
-    console.log("---*******-----", randomPrizePicker);
+    console.log("randomPrizePicker => ", randomPrizePicker);
+    console.log("coin check => ", gameObject.coinExists);
+    console.log("green mush check => ", gameObject.greenMushroomExists);
+    console.log("red mush check => ", gameObject.redMushroomExists);
+    console.log("fire flower check => ", gameObject.fireFlowerExists);
     prizeAppears.play();
 };
 
@@ -909,16 +920,16 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
 
         if (
-            currScore > 50 &&
+            currScore > 0 &&
             gameTime > 60 &&
-            !gameObject.bowserExists &&
-            bowserCounter < 3
+            !gameObject.bowserExists
+            
         ) {
-            createFire();
             createBowser();
+            createBowserFire();
             createPrincess();
-            console.log("change background");
-            background.style.animation = "slide 1s linear infinite";
+            //console.log("change background");
+            //background.style.animation = "slide 1s linear infinite";
 
             
         }
@@ -942,11 +953,7 @@ const gameLoop = (timestamp) => {
         ) {
             prizeGenerator();
         }
-        if (timer.textContent < 50) {
-            timer.style.color = "red";
-        }
-        if (timer.textContent === 50.0) createPipe();
-        mario.style.backgroundPosition = `-${position}px 0px`;
+        
 
         if (gameObject.jump) {
             onplatformCheck();
