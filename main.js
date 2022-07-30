@@ -373,7 +373,7 @@ const createMarioFire = () => {
     marioFireBall = document.createElement("div");
     marioFireBall.id = "marioFire";
     marioFireBall.style.left = mario.style.left + 10 + "px" ;
-    marioFireBall.style.bottom = 0 + "px" 
+    marioFireBall.style.bottom = -5 + "px" 
     gameObject.marioCanShoot = true;   
     mario.appendChild(marioFireBall);
 
