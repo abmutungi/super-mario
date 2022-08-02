@@ -357,7 +357,7 @@ const movedown = (now) => {
         console.log(mario.getBoundingClientRect().bottom);
     } else if (gameObject.onPrize) {
         mario.style.bottom =
-            prizePlatform.getBoundingClientRect().top + 120 + "px";
+            prizePlatform.getBoundingClientRect().top + 300 + "px";
     }
 };
 

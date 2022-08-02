@@ -133,21 +133,11 @@
 
 #prizeBrick {
   position: absolute;
-  bottom: 400px;
+  bottom: 450px;
   height: 58px;
   width: 300px;
   background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png") 0px 0px;
 }
-
-#greenPipe {
-  background: url("img/uv-pipe-big-25992.png");
-  position: absolute;
-  left: 1200px;
-  bottom: 60px;
-  height: 85px;
-  width: 85px;
-}
-
 
 
 #timer {
@@ -174,7 +164,7 @@
 #flyingBullet {
   position: absolute;
   left: 1500px;
-  bottom: 405px;
+  bottom: 500px;
   height: 40px;
   width: 50px;
   background: url("img/flying-bullet.png") 0px 0px;
