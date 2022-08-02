@@ -29,6 +29,17 @@
   background: url("img/pngkey.com-goomba-png-1876196.png") 0px 0px;
 }
 
+#gameover {
+  position: absolute;
+  left: 450px;
+  bottom: 200px;
+  width: 466px;
+  height: 350px;
+  display: none;
+  background: url("img/maxresdefault.0.jpg") 0px 0px;
+}
+
+
 #bowser {
   position: absolute;
   left: 1200px;
@@ -49,7 +60,7 @@
 
 #fire {
   position: absolute;
-  left: 1500px;
+  left: 1000px;
   bottom: 125px;
   height: 40px;
   width: 35px;
@@ -92,14 +103,15 @@
     0px 0px;
 }
 
-#fireFlower {
+#blueShell {
   position: relative;
   left: 100px;
   bottom: 40px;
-  height: 40px;
+  height: 50px;
   width: 50px;
-  background-color: red;
-}
+  background: url("img/pinpng.com-mario-question-mark-png-6881003.png")
+    0px 0px;
+  }
 /* 
 #floor {
   position: absolute;
@@ -148,6 +160,28 @@
   color: azure;
 }
 
+#startGame {
+  position: absolute;
+  left: 500px;
+  bottom: 10px;
+  width: 1200px;
+  height: 30px;
+  font-family: "Press Start 2P", cursive;
+  display: block;
+  color: gold
+}
+
+#gameOver {
+  position: absolute;
+  left: 480px;
+  bottom: 400px;
+  width: 450px;
+  height: 30px;
+  font-family: "Press Start 2P", cursive;
+  color: azure;
+  display: none;
+}
+
 #pauseMenu {
   position: relative;
   left: 250px;
@@ -188,6 +222,16 @@
   position: relative;
   left: 60px;
   background-size: 1300px;
+}
+
+#startmenu {
+  width: 1260px;
+  height: 700px;
+  position: relative;
+  left: 0px;
+  bottom: 700px;
+  display: block;
+  background: url("img/pngwing.com.png") 0px 0px;
 }
 
 .container {
