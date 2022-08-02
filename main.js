@@ -1198,12 +1198,12 @@ const gameLoop = (timestamp) => {
         requestAnimationFrame(gameLoop);
     } else if (princessSavedCheck()) {
         alert(
-            "YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
+            `YOU SAVED THE PRINCESS AND WON THE GAME WITH A SCORE OF ${currTime + currScore}, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
         );
         location.reload();
     } else if (currTime === 0) {
         alert(
-            "YOU RAN OUT OF TIME AND LOST THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
+            `YOU RAN OUT OF TIME AND LOST THE GAME WITH A SCORE OF ${currTime + currScore}, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
         );
         location.reload();
     } else if (currLives === 0) {
