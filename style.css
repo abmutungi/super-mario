@@ -16,6 +16,8 @@
   width: 45.5px;
   opacity: 1;
   background: url("img/mario-jump.png") 0px 0px;
+  
+ 
 }
 
 #goomba {
@@ -27,6 +29,17 @@
   background: url("img/pngkey.com-goomba-png-1876196.png") 0px 0px;
 }
 
+#gameover {
+  position: absolute;
+  left: 450px;
+  bottom: 200px;
+  width: 466px;
+  height: 350px;
+  display: none;
+  background: url("img/maxresdefault.0.jpg") 0px 0px;
+}
+
+
 #bowser {
   position: absolute;
   left: 1200px;
@@ -34,8 +47,7 @@
   height: 100px;
   width: 113px;
   opacity: 1;
-  background: url("img/favpng_super-mario-maker-super-mario-bros-wii-u.png") 0px
-    0px;
+  background: url("img/favpng_super-mario-maker-super-mario-bros-wii-u.png") 0px 0px;
 }
 
 #princess {
@@ -43,13 +55,12 @@
   bottom: 95px;
   height: 120px;
   width: 69px;
-  background: url("img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_640.png")
-    0px 0px;
+  background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_640.png') 0px 0px;
 }
 
 #fire {
   position: absolute;
-  left: 1500px;
+  left: 1000px;
   bottom: 125px;
   height: 40px;
   width: 35px;
@@ -60,8 +71,7 @@
   position: relative;
   height: 40px;
   width: 35px;
-  background: url("img/imgbin_super-mario-kart-super-nintendo-entertainment-system-mario-series-png.png")
-    0px 0px;
+  background: url("img/imgbin_super-mario-kart-super-nintendo-entertainment-system-mario-series-png.png") 0px 0px;
 }
 
 #coin {
@@ -89,17 +99,19 @@
   bottom: 40px;
   height: 40px;
   width: 50px;
-  background: url("img/clipart1474184.png") 0px 0px;
+  background: url("img/clipart1474184.png")
+    0px 0px;
 }
 
-#fireFlower {
+#blueShell {
   position: relative;
   left: 100px;
   bottom: 40px;
-  height: 40px;
+  height: 50px;
   width: 50px;
-  background: url("img/clipart27232.png") 0px 0px;
-}
+  background: url("img/pinpng.com-mario-question-mark-png-6881003.png")
+    0px 0px;
+  }
 /* 
 #floor {
   position: absolute;
@@ -116,8 +128,7 @@
   bottom: 295px;
   height: 58px;
   width: 150px;
-  background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png")
-    0px 0px;
+  background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png") 0px 0px;
 }
 
 #prizeBrick {
@@ -125,17 +136,7 @@
   bottom: 365px;
   height: 58px;
   width: 300px;
-  background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png")
-    0px 0px;
-}
-
-#flyingBullet {
-  position: absolute;
-  left: 1500px;
-  bottom: 405px;
-  height: 40px;
-  width: 50px;
-  background: url("img/flying-bullet.png") 0px 0px;
+  background: url("img/toppng.com-super-mario-bros-super-mario-bros-cloud-1863x701.png") 0px 0px;
 }
 
 #greenPipe {
@@ -147,6 +148,8 @@
   width: 85px;
 }
 
+
+
 #timer {
   position: absolute;
   left: 1100px;
@@ -155,6 +158,37 @@
   height: 30px;
   font-family: "Press Start 2P", cursive;
   color: azure;
+}
+
+#startGame {
+  position: absolute;
+  left: 500px;
+  bottom: 10px;
+  width: 1200px;
+  height: 30px;
+  font-family: "Press Start 2P", cursive;
+  display: block;
+  color: gold
+}
+
+#flyingBullet {
+  position: absolute;
+  left: 1500px;
+  bottom: 405px;
+  height: 40px;
+  width: 50px;
+  background: url("img/flying-bullet.png") 0px 0px;
+}
+
+#gameOver {
+  position: absolute;
+  left: 480px;
+  bottom: 400px;
+  width: 450px;
+  height: 30px;
+  font-family: "Press Start 2P", cursive;
+  color: azure;
+  display: none;
 }
 
 #pauseMenu {
@@ -197,6 +231,16 @@
   position: relative;
   left: 60px;
   background-size: 1300px;
+}
+
+#startmenu {
+  width: 1260px;
+  height: 700px;
+  position: relative;
+  left: 0px;
+  bottom: 700px;
+  display: block;
+  background: url("img/pngwing.com.png") 0px 0px;
 }
 
 .container {
