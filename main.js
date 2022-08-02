@@ -127,7 +127,7 @@ const startMessage = () => {
 const endMessage = () => {
     end = document.createElement("div");
     end.id = "gameOver";
-    end.textContent = `Play again to defeat Bowser and save the Princess.`;
+    end.textContent = `Play again by pressing S to defeat Bowser and save the Princess.`;
     game.appendChild(end);
 };
 
@@ -276,6 +276,7 @@ let gameObject = {
     princessExists: false,
     flyingBulletExists: false,
     bowserShooting: false,
+    endGame: false,
 };
 
 const moveup = (now) => {
@@ -636,12 +637,15 @@ const moveGoomba = () => {
         goombaLeft = 0;
         goomba.remove();
         gameObject.goombaExists = false;
-        marioOpacity -= 0.25;
-        if (mario.classList.length === 2) {
-            mario.classList.toggle("normal");
+        if (currLives > 1 && marioOpacity > 0.25){
+
+          marioOpacity -= 0.25;
+          if (mario.classList.length === 2) {
+              mario.classList.toggle("normal");
+          }
+          mario.style.opacity = marioOpacity;
         }
 
-        mario.style.opacity = marioOpacity;
         currLives -= 1;
         currScore -= 5;
         lives.textContent = `LIVES: ${currLives}`;
@@ -1013,8 +1017,13 @@ const control = (e) => {
         if (gameObject.start) {
             startM.remove();
             startMenu.remove();
+           
             gameObject.start = false;
         }
+    }else if (e.key === "s" || e.key === "S"){
+      if (gameObject.endGame){
+        location.reload();
+      }
     }
 };
 document.addEventListener("keydown", function (e) {
@@ -1205,17 +1214,20 @@ const gameLoop = (timestamp) => {
     if (currTime > 0 && currLives > 0 && !princessSavedCheck()) {
         requestAnimationFrame(gameLoop);
     } else if (princessSavedCheck()) {
-        cage.remove();
+        alert(
+            `YOU SAVED THE PRINCESS AND WON THE GAME WITH A SCORE OF ${currTime + currScore}, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
+        );
         location.reload();
         // alert(
         //     "YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
         // );
     } else if (currTime === 0) {
         alert(
-            "YOU RAN OUT OF TIME AND LOST THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
+            `YOU RAN OUT OF TIME AND LOST THE GAME WITH A SCORE OF ${currTime + currScore}, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
         );
         location.reload();
     } else if (currLives === 0) {
+      gameObject.endGame = true;
         gameOver.style.display = "block";
         end.style.display = "block";
 
