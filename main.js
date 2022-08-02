@@ -33,13 +33,14 @@ let goombaLeft = 0;
 let fireBall;
 let fireLeft = 0;
 let bowserFireCounter = 0;
-let marioFireBall;
-let marioFireBallLeft = 0;
+let marioShell;
+let marioShellLeft = 0;
 let marioFireCounter = 10;
 let bowser;
 let bowserStrength = 100;
 let platform;
 let princess;
+let cage;
 let platformLeft = 0;
 let coin;
 let redMushroom;
@@ -401,12 +402,17 @@ const createBowserFire = () => {
 };
 
 const createMarioFire = () => {
-    marioFireBall = document.createElement("div");
-    marioFireBall.id = "marioFire";
-    marioFireBall.style.left = mario.style.left + 10 + "px";
-    marioFireBall.style.bottom = -5 + "px";
+    marioShell = document.createElement("div");
+    marioShell.id = "marioFire";
+    marioShell.style.left = mario.style.left + 10 + "px";
+
+    if (mario.classList.length === 2) {
+        marioShell.style.bottom = -35 + "px";
+    }
+
+    marioShell.style.bottom = -15 + "px";
     //gameObject.marioCanShoot = true;
-    mario.appendChild(marioFireBall);
+    mario.appendChild(marioShell);
 };
 
 const breatheFire = () => {
@@ -447,14 +453,14 @@ const breatheFire = () => {
 
 const marioBreatheFire = () => {
     if (gameObject.marioShooting) {
-        marioFireBallLeft += 20;
+        marioShellLeft += 20;
 
-        marioFireBall.style.transform = `translateX(${marioFireBallLeft}px) scaleX(-1)`;
+        marioShell.style.transform = `translateX(${marioShellLeft}px) scaleX(-1)`;
         fireSound.play();
 
         if (goombaFireCollisionCheck()) {
-            marioFireBallLeft = 0;
-            marioFireBall.remove();
+            marioShellLeft = 0;
+            marioShell.remove();
             goombaLeft = 0;
             goomba.remove();
             gameObject.goombaExists = false;
@@ -469,8 +475,8 @@ const marioBreatheFire = () => {
             }
         }
         if (bowserFireCollisionCheck()) {
-            marioFireBallLeft = 0;
-            marioFireBall.remove();
+            marioShellLeft = 0;
+            marioShell.remove();
             gameObject.marioShooting = false;
 
             bowserStrength -= 20;
@@ -488,13 +494,13 @@ const marioBreatheFire = () => {
             }
         }
         if (
-            marioFireBall.getBoundingClientRect().left >
+            marioShell.getBoundingClientRect().left >
                 game.getBoundingClientRect().right ||
-            marioFireBall.getBoundingClientRect().left <
+            marioShell.getBoundingClientRect().left <
                 game.getBoundingClientRect().left
         ) {
-            marioFireBallLeft = 0;
-            marioFireBall.remove();
+            marioShellLeft = 0;
+            marioShell.remove();
             gameObject.marioShooting = false;
 
             if (marioFireCounter > 0) {
@@ -513,6 +519,13 @@ const createPrincess = () => {
     princess.style.left = 1100 + "px";
     game.appendChild(princess);
     gameObject.princessExists = true;
+};
+
+const createCage = () => {
+    cage = document.createElement("div");
+    cage.setAttribute("id", "cage");
+    cage.style.left = 1100 + "px";
+    game.appendChild(cage);
 };
 
 const createPlatform = () => {
@@ -769,11 +782,11 @@ const fireCollisionCheck = () => {
 const goombaFireCollisionCheck = () => {
     if (gameObject.marioShooting) {
         if (
-            marioFireBall.getBoundingClientRect().left <
+            marioShell.getBoundingClientRect().left <
                 goomba.getBoundingClientRect().left &&
-            marioFireBall.getBoundingClientRect().right >
+            marioShell.getBoundingClientRect().right >
                 goomba.getBoundingClientRect().left &&
-            marioFireBall.getBoundingClientRect().bottom >
+            marioShell.getBoundingClientRect().bottom >
                 goomba.getBoundingClientRect().top
         ) {
             console.log("goomba flamesed");
@@ -786,11 +799,11 @@ const goombaFireCollisionCheck = () => {
 const bowserFireCollisionCheck = () => {
     if (gameObject.marioShooting && gameObject.bowserExists) {
         if (
-            marioFireBall.getBoundingClientRect().left <
+            marioShell.getBoundingClientRect().left <
                 bowser.getBoundingClientRect().left &&
-            marioFireBall.getBoundingClientRect().right >
+            marioShell.getBoundingClientRect().right >
                 bowser.getBoundingClientRect().left &&
-            marioFireBall.getBoundingClientRect().bottom >
+            marioShell.getBoundingClientRect().bottom >
                 bowser.getBoundingClientRect().top
         ) {
             console.log("bowser flamesed");
@@ -1091,10 +1104,14 @@ const gameLoop = (timestamp) => {
 
         if (gameObject.bowserExists) {
             themeTune.volume = 0;
+            background.style.animation = "";
             bowserMusic.play();
             bowserFireCounter++;
 
-            if (bowserStrength === 20) createPrincess();
+            if (bowserStrength === 20) {
+                createPrincess();
+                createCage();
+            }
             //if (bowserFireCounter > 100) bowserFireCounter =0;
             if (
                 gameObject.bowserExists &&
@@ -1188,10 +1205,11 @@ const gameLoop = (timestamp) => {
     if (currTime > 0 && currLives > 0 && !princessSavedCheck()) {
         requestAnimationFrame(gameLoop);
     } else if (princessSavedCheck()) {
-        alert(
-            "YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
-        );
+        cage.remove();
         location.reload();
+        // alert(
+        //     "YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
+        // );
     } else if (currTime === 0) {
         alert(
             "YOU RAN OUT OF TIME AND LOST THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"

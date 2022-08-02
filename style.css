@@ -53,10 +53,20 @@
 #princess {
   position: absolute;
   bottom: 95px;
-  height: 120px;
-  width: 69px;
+  height: 200px;
+  width: 196px;
   background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_640.png') 0px 0px;
 }
+
+
+#cage {
+  position: absolute;
+  bottom: 95px;
+  height: 120px;
+  width: 69px;
+  background: url('img/53c98f365877f6f38fdcdeb3658ac2df.png') 0px 0px;
+}
+
 
 #fire {
   position: absolute;
