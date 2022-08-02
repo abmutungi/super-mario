@@ -386,7 +386,6 @@ const createBowser = () => {
         bowser = document.createElement("div");
         bowser.setAttribute("id", "bowser");
         bowser.style.left = 950 + "px";
-
         console.log("============== CREATING BOWSER =============");
         game.appendChild(bowser);
         gameObject.bowserExists = true;
@@ -654,7 +653,7 @@ const moveGoomba = () => {
 const moveFlyingBullet = () => {
     bulletLeft -= 8;
 
-    flyingBullet.style.transform = `translateX(${bulletLeft}px) scaleX(-1)`;
+    flyingBullet.style.transform = `translateX(${bulletLeft}px)`;
     if (flyingBulletCollisionCheck() === true) {
         bulletLeft = 0;
         flyingBullet.remove();
@@ -1079,7 +1078,7 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
         //bowserFireCounter++
 
-        if (currScore > 5 && !gameObject.bowserExists) {
+        if (currScore > 50 && !gameObject.bowserExists) {
             createBowser();
             createBowserFire();
 
