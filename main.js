@@ -65,6 +65,7 @@ let rightFacing = false;
 let paused = false;
 let surfaces = [];
 let randomPrizePicker = 0;
+let moveCounter = 0;
 
 let coinSound = new Audio("sounds/Mario Coin Sound.mp3");
 let marioDies = new Audio("sounds/Mario Death - Sound Effect.mp3");
@@ -155,7 +156,7 @@ const moveRight = (timestamp) => {
         right += 25;
         mario.style.transform = `translateX(${right}px)`;
 
-        gameObject.right = false;
+        //gameObject.right = false;
     } else if (
         mario.getBoundingClientRect().right >=
         game.getBoundingClientRect().right - 35
@@ -209,7 +210,7 @@ const moveLeft = () => {
 
         //console.log("left");
         //console.log(mario.getBoundingClientRect().left);
-        gameObject.left = false;
+        //gameObject.left = false;
     } else if (
         mario.getBoundingClientRect().left <
         game.getBoundingClientRect().left + 35
@@ -1056,9 +1057,24 @@ const control = (e) => {
         }
     }
 };
+
+const controlEnd = (e) => {
+    e.preventDefault();
+    if (e.key === "ArrowRight"){
+        gameObject.right = false;
+    }else if (e.key === "ArrowLeft"){
+        gameObject.left = false;
+    }
+}
 document.addEventListener("keydown", function (e) {
     control(e);
 });
+
+document.addEventListener("keyup", function(e){
+    controlEnd(e);
+})
+
+
 
 // createPlatform();
 // createPrizePlatform();
@@ -1128,6 +1144,7 @@ const gameLoop = (timestamp) => {
         goombaCounter++;
         platformCounter++;
         prizeCounter++;
+        //moveCounter++
         //bowserFireCounter++
 
         if (currScore > 5 && !gameObject.bowserExists) {
@@ -1196,11 +1213,24 @@ const gameLoop = (timestamp) => {
         }
 
         if (gameObject.right) {
-            moveRight(timestamp);
+            moveCounter++
+            if (moveCounter === 5){
+
+                moveRight();
+                moveCounter = 0;
+                
+            }
         }
 
         if (gameObject.left) {
-            moveLeft();
+            moveCounter++
+            if (moveCounter === 5){
+
+                moveLeft();
+                moveCounter = 0;
+               
+            }
+            
         }
 
         if (gameObject.animate) {
