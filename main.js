@@ -139,7 +139,6 @@ const compMessage = () => {
     game.appendChild(completed);
 };
 
-
 const showScore = () => {
     score = document.createElement("div");
     score.id = "score";
@@ -286,6 +285,7 @@ let gameObject = {
     flyingBulletExists: false,
     bowserShooting: false,
     endGame: false,
+    gameRunning: false,
 };
 
 const moveup = (now) => {
@@ -644,8 +644,8 @@ const pauseMenu = () => {
 };
 
 const startBackground = () => {
-    startMenu = document.createElement("div");
-    startMenu.id = "startmenu";
+    startMenu = document.getElementById("startmenu");
+    //startMenu.id = "startmenu";
     // startMenu.textContent = `PRESS ANY KEY TO START GAME`;
     game.appendChild(startMenu);
 };
@@ -1028,8 +1028,8 @@ const control = (e) => {
             gameObject.pause = false;
             paused = false;
         }
-    } else if (e.key === "r" || e.key === "R") {
-        if (gameObject.pause) {
+    } else if (e.key === "r" || e.key === "R") { 
+         if (gameObject.pause) {
             location.reload();
         }
     } else if (e.key === "f" || e.key === "F") {
@@ -1040,12 +1040,16 @@ const control = (e) => {
             console.log("marioFireCounter => ", marioFireCounter);
         }
     } else if (e.key === "Enter") {
+        if(!gameObject.gameRunning){
+        requestAnimationFrame(gameLoop);
+        gameObject.gameRunning = true;
         if (gameObject.start) {
             startM.remove();
             startMenu.remove();
 
             gameObject.start = false;
         }
+    }
     } else if (e.key === "s" || e.key === "S") {
         if (gameObject.endGame) {
             location.reload();
@@ -1064,13 +1068,13 @@ document.addEventListener("keydown", function (e) {
 // endMessage();
 
 const prizeGenerator = () => {
-    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 2;
+    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 4;
 
-    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 1;
+    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 3;
     if (randomPrizePicker < 1) createCoin();
-    // if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
-    // if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
-    if (randomPrizePicker >= 1) createBlueShell();
+    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
+    if (randomPrizePicker >= 3) createBlueShell();
 
     console.log("randomPrizePicker => ", randomPrizePicker);
     console.log("coin check => ", gameObject.coinExists);
@@ -1126,7 +1130,7 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
         //bowserFireCounter++
 
-        if (currScore > 5 && !gameObject.bowserExists) {
+        if (currScore > 50 && !gameObject.bowserExists) {
             createBowser();
             createBowserFire();
 
@@ -1244,7 +1248,7 @@ const gameLoop = (timestamp) => {
         princess.remove();
         createSavedPrincess();
         endCredit.style.display = "block";
-        compMessage()
+        compMessage();
         // alert(
         //     `YOU SAVED THE PRINCESS AND WON THE GAME WITH A SCORE OF ${
         //         currTime + currScore
@@ -1282,4 +1286,4 @@ startMessage();
 startBackground();
 endBackground();
 
-requestAnimationFrame(gameLoop);
+// requestAnimationFrame(gameLoop);
