@@ -73,14 +73,6 @@
   width: 355px;
   background: url('img/pngwing.com small .png') 0px 0px;
 }
-/* #cage {
-  position: absolute;
-  bottom: 45px;
-  height: 200px;
-  width: 196px;
-  background: url('img/53c98f365877f6f38fdcdeb3658ac2df.png') 0px 0px;
-} */
-
 
 #fire {
   position: absolute;
@@ -91,7 +83,7 @@
   background: url("img/fire.png") 0px 0px;
 }
 
-#marioFire {
+#marioShell {
   position: relative;
   height: 40px;
   width: 35px;
