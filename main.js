@@ -50,6 +50,7 @@ let blueShell;
 let timer;
 let currTime = 0;
 let score;
+let finalScore;
 let currScore = 0;
 let marioY = 0;
 let lives;
@@ -120,9 +121,7 @@ const endMessage = () => {
 const compMessage = () => {
     completed = document.createElement("div");
     completed.id = "completed";
-    completed.textContent = `Thank you Mario! The Kingdom is saved! \r\n\r\n\r\n\r\n FINAL SCORE: ${
-        currTime + currScore
-    }`;
+    completed.textContent = `Thank you Mario! The Kingdom is saved!`;
     game.appendChild(completed);
 };
 
@@ -131,6 +130,13 @@ const showScore = () => {
     score.id = "score";
     score.textContent = `SCORE: ${currScore}`;
     game.appendChild(score);
+};
+
+const showFinalScore = () => {
+    finalScore = document.createElement("div");
+    finalScore.id = "finalScore";
+    finalScore.textContent = `FINAL SCORE: ${currTime + currScore}`;
+    game.appendChild(finalScore);
 };
 
 const showLives = () => {
@@ -526,7 +532,7 @@ const createPrincess = () => {
 const createSavedPrincess = () => {
     savedprincess = document.createElement("div");
     savedprincess.setAttribute("id", "savedprincess");
-    savedprincess.style.left = 540 + "px";
+    savedprincess.style.left = 510 + "px";
     game.appendChild(savedprincess);
 };
 
@@ -1060,21 +1066,19 @@ const control = (e) => {
 
 const controlEnd = (e) => {
     e.preventDefault();
-    if (e.key === "ArrowRight"){
+    if (e.key === "ArrowRight") {
         gameObject.right = false;
-    }else if (e.key === "ArrowLeft"){
+    } else if (e.key === "ArrowLeft") {
         gameObject.left = false;
     }
-}
+};
 document.addEventListener("keydown", function (e) {
     control(e);
 });
 
-document.addEventListener("keyup", function(e){
+document.addEventListener("keyup", function (e) {
     controlEnd(e);
-})
-
-
+});
 
 // createPlatform();
 // createPrizePlatform();
@@ -1084,13 +1088,13 @@ document.addEventListener("keyup", function(e){
 // endMessage();
 
 const prizeGenerator = () => {
-    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 4;
+    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 2; //4
 
-    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 3;
+    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 1; //3
     if (randomPrizePicker < 1) createCoin();
-    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
-    if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
-    if (randomPrizePicker >= 3) createBlueShell();
+    // if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    // if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
+    if (randomPrizePicker >= 1) createBlueShell(); //3
 
     console.log("randomPrizePicker => ", randomPrizePicker);
     console.log("coin check => ", gameObject.coinExists);
@@ -1213,24 +1217,19 @@ const gameLoop = (timestamp) => {
         }
 
         if (gameObject.right) {
-            moveCounter++
-            if (moveCounter === 5){
-
+            moveCounter++;
+            if (moveCounter === 7) {
                 moveRight();
                 moveCounter = 0;
-                
             }
         }
 
         if (gameObject.left) {
-            moveCounter++
-            if (moveCounter === 5){
-
+            moveCounter++;
+            if (moveCounter === 7) {
                 moveLeft();
                 moveCounter = 0;
-               
             }
-            
         }
 
         if (gameObject.animate) {
@@ -1279,6 +1278,8 @@ const gameLoop = (timestamp) => {
         createSavedPrincess();
         endCredit.style.display = "block";
         compMessage();
+        showFinalScore();
+        //location.reload();
     } else if (currTime === 0) {
         gameObject.endGame = true;
         gameOver.style.display = "block";

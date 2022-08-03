@@ -60,7 +60,7 @@
 
 #savedprincess {
   position: absolute;
-  bottom: 95px;
+  bottom: 45px;
   height: 105px;
   width: 60px;
   background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_6401.png') 0px 0px;
@@ -198,12 +198,21 @@
 
 #completed {
   position: absolute;
-  left: 480px;
-  bottom: 360px;
-  width: 610px;
-  height: 30px;
+  left: 350px;
+  bottom: 400px;
+  width: 640px;
   font-family: "Press Start 2P", cursive;
-  color: azure;
+  color: gold;
+  display: block;
+}
+
+#finalScore {
+  position: absolute;
+  left: 550px;
+  bottom: 360px;
+  width: 340px;
+  font-family: "Press Start 2P", cursive;
+  color: gold;
   display: block;
 }
 
