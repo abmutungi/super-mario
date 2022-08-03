@@ -94,23 +94,6 @@ const animateScript = () => {
     }
 };
 
-const marioGrow = (newScale) => {
-    mario.style.transform = mario.style.transform.replace(
-        /scale\([0-9|\.]*\)/,
-        "scale(" + newScale + ")"
-    );
-    console.log("mario grow");
-};
-
-const changeScale = (newScale) => {
-    let curTrans = mario.style.transform;
-    let newScaleString = "scale(" + newScale + ")";
-    let regex = /scale\([0-9|\.]*\)/;
-    let newTrans = curTrans.replace(regex, newScaleString);
-    mario.style.transform = newTrans;
-    console.log("change scale");
-};
-
 const showTimer = () => {
     timer = document.createElement("div");
     timer.id = "timer";
@@ -546,8 +529,6 @@ const createSavedPrincess = () => {
     game.appendChild(savedprincess);
 };
 
-
-
 const createCage = () => {
     cage = document.createElement("div");
     cage.setAttribute("id", "cage");
@@ -640,16 +621,15 @@ const createLogo = () => {
     logo.style.left = 440 + "px";
 };
 
-
 const pauseMenu = () => {
     menu = document.createElement("div");
     menu.id = "pauseMenu";
-    menu.textContent = `       PRESS C TO CONTINUE \r\n\r\n\r\n       PRESS R TO RESTART\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n       CONTROLS: \r\n\r\n\r\n\r\n       MOVE: ← → \r\n\r\n\r\n\r\n       JUMP: SPACEBAR or ↑\r\n\r\n\r\n\r\n       SHOOT SHELLS: F`;
+    menu.textContent = `  PRESS C TO CONTINUE \r\n\r\n\r\n  PRESS R TO RESTART\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n  CONTROLS \r\n\r\n\r\n\r\n       MOVE: ← → \r\n\r\n\r\n\r\n       JUMP: SPACEBAR or ↑\r\n\r\n\r\n\r\n       SHOOT SHELLS: F`;
     if (gameObject.pause) {
         if (!paused) {
             game.appendChild(menu);
-            createLogo()
-            menu.appendChild(logo)
+            createLogo();
+            menu.appendChild(logo);
             paused = true;
         }
     }
@@ -759,7 +739,8 @@ const bowserCollisionCheck = () => {
             bowser.getBoundingClientRect().left >
                 mario.getBoundingClientRect().left &&
             bowser.getBoundingClientRect().bottom >= 614 &&
-            !gameObject.onPlatform && !gameObject.onPrize
+            !gameObject.onPlatform &&
+            !gameObject.onPrize
         ) {
             console.log("Bowser Hit");
             return true;
@@ -864,13 +845,17 @@ const bowserHit = () => {
                 mario.getBoundingClientRect().right >=
                     bowser.getBoundingClientRect().left &&
                 mario.getBoundingClientRect().bottom >=
-                    bowser.getBoundingClientRect().top - 5 && !gameObject.onPlatform && !gameObject.onPrize) ||
+                    bowser.getBoundingClientRect().top - 5 &&
+                !gameObject.onPlatform &&
+                !gameObject.onPrize) ||
             (mario.getBoundingClientRect().left <=
                 bowser.getBoundingClientRect().right &&
                 mario.getBoundingClientRect().right >=
                     bowser.getBoundingClientRect().right &&
                 mario.getBoundingClientRect().bottom >=
-                    bowser.getBoundingClientRect().top - 5 && !gameObject.onPlatform && !gameObject.onPrize)
+                    bowser.getBoundingClientRect().top - 5 &&
+                !gameObject.onPlatform &&
+                !gameObject.onPrize)
         ) {
             console.log("Bowser Hit", bowserCounter);
             return true;
@@ -1033,8 +1018,7 @@ const control = (e) => {
         rightFacing = true;
         gameObject.right = true;
     } else if (e.key === "p" || e.key === "P") {
-        if (gameObject.gameRunning){
-
+        if (gameObject.gameRunning) {
             gameObject.pause = true;
             pauseSound.play();
         }
@@ -1265,31 +1249,14 @@ const gameLoop = (timestamp) => {
         createSavedPrincess();
         endCredit.style.display = "block";
         compMessage();
-        // alert(
-        //     `YOU SAVED THE PRINCESS AND WON THE GAME WITH A SCORE OF ${
-        //         currTime + currScore
-        //     }, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
-        // );
-        // location.reload();
-        // alert(
-        //     "YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
-        // );
     } else if (currTime === 0) {
-        alert(
-            `YOU RAN OUT OF TIME AND LOST THE GAME WITH A SCORE OF ${
-                currTime + currScore
-            }, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
-        );
-        location.reload();
+        gameObject.endGame = true;
+        gameOver.style.display = "block";
+        end.style.display = "block";
     } else if (currLives === 0) {
         gameObject.endGame = true;
         gameOver.style.display = "block";
         end.style.display = "block";
-
-        // alert(
-        //     "YOU RAN OUT OF LIVES AND LOST THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
-        // );
-        // location.reload();
     }
 };
 gameover();

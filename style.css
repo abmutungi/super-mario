@@ -110,9 +110,9 @@
 #redMushroom {
   position: relative;
   left: 100px;
-  bottom: 40px;
-  height: 40px;
-  width: 50px;
+  bottom: 0px;
+  height: 25px;
+  width: 25px;
   background: url("img/super-mario-bros-8-bit-mushroom-mario-background-1e204bf6ce54f1ee445dc8ec41d1eeb7.png")
     0px 0px;
 }
@@ -120,9 +120,9 @@
 #greenMushroom {
   position: relative;
   left: 100px;
-  bottom: 40px;
-  height: 40px;
-  width: 50px;
+  bottom: 0px;
+  height: 25px;
+  width: 25px;
   background: url("img/clipart1474184.png")
     0px 0px;
 }
@@ -130,21 +130,12 @@
 #blueShell {
   position: relative;
   left: 100px;
-  bottom: 40px;
-  height: 50px;
-  width: 50px;
+  bottom: 0px;
+  height: 25px;
+  width: 25px;
   background: url("img/pinpng.com-mario-question-mark-png-6881003.png")
     0px 0px;
   }
-/* 
-#floor {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  height: 94px;
-  width: 5000px;
-  background: url("img/Bricks.png") 0px 0px;
-} */
 
 #brick {
   position: absolute;
@@ -248,9 +239,6 @@
   font-family: "Press Start 2P", cursive;
   color: azure;
 }
-
-
-
 
 #game {
   width: 1300px;
