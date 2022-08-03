@@ -431,8 +431,14 @@ const breatheFire = () => {
 
             gameObject.bowserShooting = false;
             goombaBump.play();
-            // marioOpacity -= 0.25;
-            // if (currLives > 1 && mario.style.opacity > 0.25) mario.style.opacity = marioOpacity;
+            if (currLives > 1 && marioOpacity > 0.25){
+
+                marioOpacity -= 0.25;
+                if (mario.classList.length === 2) {
+                    mario.classList.toggle("normal");
+                }
+                mario.style.opacity = marioOpacity;
+              }
             currLives -= 1;
             currScore -= 10;
             lives.textContent = `LIVES: ${currLives}`;
@@ -773,8 +779,8 @@ const fireCollisionCheck = () => {
             fireBall.getBoundingClientRect().left <
                 mario.getBoundingClientRect().right &&
             fireBall.getBoundingClientRect().left >
-                mario.getBoundingClientRect().left &&
-            mario.getBoundingClientRect().bottom >= 614
+                mario.getBoundingClientRect().left 
+                && mario.getBoundingClientRect().bottom >= 614
         ) {
             console.log("mario flamesed");
             return true;
