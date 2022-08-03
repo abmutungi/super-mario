@@ -53,6 +53,7 @@ let score;
 let currScore = 0;
 let marioY = 0;
 let lives;
+let logo;
 let currLives = 3;
 let marioOpacity = 1;
 let bowserOpacity = 1;
@@ -135,7 +136,7 @@ const endMessage = () => {
 const compMessage = () => {
     completed = document.createElement("div");
     completed.id = "completed";
-    completed.textContent = `Thank you Mario! The Kingdom is saved! \r\n\r\n FINAL SCORE: ${
+    completed.textContent = `Thank you Mario! The Kingdom is saved! \r\n\r\n\r\n\r\n FINAL SCORE: ${
         currTime + currScore
     }`;
     game.appendChild(completed);
@@ -541,9 +542,11 @@ const createPrincess = () => {
 const createSavedPrincess = () => {
     savedprincess = document.createElement("div");
     savedprincess.setAttribute("id", "savedprincess");
-    savedprincess.style.left = 1100 + "px";
+    savedprincess.style.left = 540 + "px";
     game.appendChild(savedprincess);
 };
+
+
 
 const createCage = () => {
     cage = document.createElement("div");
@@ -631,15 +634,22 @@ const createFlyingBullet = () => {
     game.appendChild(flyingBullet);
     gameObject.flyingBulletExists = true;
 };
+const createLogo = () => {
+    logo = document.createElement("div");
+    logo.setAttribute("id", "logo");
+    logo.style.left = 440 + "px";
+};
+
 
 const pauseMenu = () => {
     menu = document.createElement("div");
     menu.id = "pauseMenu";
-    menu.textContent = `PRESS C TO CONTINUE \r\n\r\n\r\nPRESS R TO RESTART`;
-
+    menu.textContent = `       PRESS C TO CONTINUE \r\n\r\n\r\n       PRESS R TO RESTART\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n       CONTROLS: \r\n\r\n\r\n\r\n       MOVE: ← → \r\n\r\n\r\n\r\n       JUMP: SPACEBAR or ↑\r\n\r\n\r\n\r\n       SHOOT SHELLS: F`;
     if (gameObject.pause) {
         if (!paused) {
             game.appendChild(menu);
+            createLogo()
+            menu.appendChild(logo)
             paused = true;
         }
     }

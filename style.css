@@ -65,6 +65,14 @@
   width: 60px;
   background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_6401.png') 0px 0px;
 }
+
+#logo {
+  position: absolute;
+  bottom: 95px;
+  height: 200px;
+  width: 355px;
+  background: url('img/pngwing.com small .png') 0px 0px;
+}
 /* #cage {
   position: absolute;
   bottom: 45px;
@@ -201,7 +209,7 @@
   position: absolute;
   left: 480px;
   bottom: 360px;
-  width: 450px;
+  width: 610px;
   height: 30px;
   font-family: "Press Start 2P", cursive;
   color: azure;
