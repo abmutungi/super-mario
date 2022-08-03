@@ -21,6 +21,7 @@ let gameOver;
 let startM;
 let startMenu;
 let end;
+let endCredit;
 let background = document.querySelector(".sliding-background");
 let starttime;
 let isJumping = false;
@@ -130,6 +131,14 @@ const endMessage = () => {
     end.textContent = `Play again by pressing S to defeat Bowser and save the Princess.`;
     game.appendChild(end);
 };
+
+const compMessage = () => {
+    completed = document.createElement("div");
+    completed.id = "completed";
+    completed.textContent = `Thank you Mario! The Kingdom is saved! Now try a more difficult quest...`;
+    game.appendChild(completed);
+};
+
 
 const showScore = () => {
     score = document.createElement("div");
@@ -431,14 +440,13 @@ const breatheFire = () => {
 
             gameObject.bowserShooting = false;
             goombaBump.play();
-            if (currLives > 1 && marioOpacity > 0.25){
-
+            if (currLives > 1 && marioOpacity > 0.25) {
                 marioOpacity -= 0.25;
                 if (mario.classList.length === 2) {
                     mario.classList.toggle("normal");
                 }
                 mario.style.opacity = marioOpacity;
-              }
+            }
             currLives -= 1;
             currScore -= 10;
             lives.textContent = `LIVES: ${currLives}`;
@@ -528,10 +536,17 @@ const createPrincess = () => {
     gameObject.princessExists = true;
 };
 
+const createSavedPrincess = () => {
+    savedprincess = document.createElement("div");
+    savedprincess.setAttribute("id", "savedprincess");
+    savedprincess.style.left = 1100 + "px";
+    game.appendChild(savedprincess);
+};
+
 const createCage = () => {
     cage = document.createElement("div");
     cage.setAttribute("id", "cage");
-    cage.style.left = 1100 + "px";
+    cage.style.left = 1050 + "px";
     game.appendChild(cage);
 };
 
@@ -635,6 +650,12 @@ const startBackground = () => {
     game.appendChild(startMenu);
 };
 
+const endBackground = () => {
+    endCredit = document.createElement("div");
+    endCredit.id = "endCredit";
+    game.appendChild(endCredit);
+};
+
 const moveGoomba = () => {
     goombaLeft -= 6;
 
@@ -643,13 +664,12 @@ const moveGoomba = () => {
         goombaLeft = 0;
         goomba.remove();
         gameObject.goombaExists = false;
-        if (currLives > 1 && marioOpacity > 0.25){
-
-          marioOpacity -= 0.25;
-          if (mario.classList.length === 2) {
-              mario.classList.toggle("normal");
-          }
-          mario.style.opacity = marioOpacity;
+        if (currLives > 1 && marioOpacity > 0.25) {
+            marioOpacity -= 0.25;
+            if (mario.classList.length === 2) {
+                mario.classList.toggle("normal");
+            }
+            mario.style.opacity = marioOpacity;
         }
 
         currLives -= 1;
@@ -779,8 +799,8 @@ const fireCollisionCheck = () => {
             fireBall.getBoundingClientRect().left <
                 mario.getBoundingClientRect().right &&
             fireBall.getBoundingClientRect().left >
-                mario.getBoundingClientRect().left 
-                && mario.getBoundingClientRect().bottom >= 614
+                mario.getBoundingClientRect().left &&
+            mario.getBoundingClientRect().bottom >= 614
         ) {
             console.log("mario flamesed");
             return true;
@@ -1023,13 +1043,13 @@ const control = (e) => {
         if (gameObject.start) {
             startM.remove();
             startMenu.remove();
-           
+
             gameObject.start = false;
         }
-    }else if (e.key === "s" || e.key === "S"){
-      if (gameObject.endGame){
-        location.reload();
-      }
+    } else if (e.key === "s" || e.key === "S") {
+        if (gameObject.endGame) {
+            location.reload();
+        }
     }
 };
 document.addEventListener("keydown", function (e) {
@@ -1044,13 +1064,13 @@ document.addEventListener("keydown", function (e) {
 // endMessage();
 
 const prizeGenerator = () => {
-    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 4;
+    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 2;
 
-    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 3;
+    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 1;
     if (randomPrizePicker < 1) createCoin();
-    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
-    if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
-    if (randomPrizePicker >= 3) createBlueShell();
+    // if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    // if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
+    if (randomPrizePicker >= 1) createBlueShell();
 
     console.log("randomPrizePicker => ", randomPrizePicker);
     console.log("coin check => ", gameObject.coinExists);
@@ -1106,11 +1126,12 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
         //bowserFireCounter++
 
-        if (currScore > 50 && !gameObject.bowserExists) {
+        if (currScore > 5 && !gameObject.bowserExists) {
             createBowser();
             createBowserFire();
 
-            //   createPrincess();
+            createPrincess();
+            //createCage();
             //gameObject.bowserShooting = true;
 
             //console.log("change background");
@@ -1123,10 +1144,10 @@ const gameLoop = (timestamp) => {
             bowserMusic.play();
             bowserFireCounter++;
 
-            if (bowserStrength === 20) {
-                createPrincess();
-                createCage();
-            }
+            // if (bowserStrength === 20) {
+            //     createPrincess();
+            //     createCage();
+            // }
             //if (bowserFireCounter > 100) bowserFireCounter =0;
             if (
                 gameObject.bowserExists &&
@@ -1220,20 +1241,28 @@ const gameLoop = (timestamp) => {
     if (currTime > 0 && currLives > 0 && !princessSavedCheck()) {
         requestAnimationFrame(gameLoop);
     } else if (princessSavedCheck()) {
-        alert(
-            `YOU SAVED THE PRINCESS AND WON THE GAME WITH A SCORE OF ${currTime + currScore}, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
-        );
-        location.reload();
+        princess.remove();
+        createSavedPrincess();
+        endCredit.style.display = "block";
+        compMessage()
+        // alert(
+        //     `YOU SAVED THE PRINCESS AND WON THE GAME WITH A SCORE OF ${
+        //         currTime + currScore
+        //     }, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
+        // );
+        // location.reload();
         // alert(
         //     "YOU SAVED THE PRINCESS AND WON THE GAME, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!"
         // );
     } else if (currTime === 0) {
         alert(
-            `YOU RAN OUT OF TIME AND LOST THE GAME WITH A SCORE OF ${currTime + currScore}, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
+            `YOU RAN OUT OF TIME AND LOST THE GAME WITH A SCORE OF ${
+                currTime + currScore
+            }, CLICK OK OR HIT ENTER TO RESTART THE GAME!!!!`
         );
         location.reload();
     } else if (currLives === 0) {
-      gameObject.endGame = true;
+        gameObject.endGame = true;
         gameOver.style.display = "block";
         end.style.display = "block";
 
@@ -1243,12 +1272,14 @@ const gameLoop = (timestamp) => {
         // location.reload();
     }
 };
+gameover();
+endMessage();
+
 createPlatform();
 createPrizePlatform();
 
 startMessage();
 startBackground();
-gameover();
-endMessage();
+endBackground();
 
 requestAnimationFrame(gameLoop);

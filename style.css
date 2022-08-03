@@ -53,19 +53,25 @@
 #princess {
   position: absolute;
   bottom: 95px;
-  height: 200px;
-  width: 196px;
+  height: 119px;
+  width: 78px;
   background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_640.png') 0px 0px;
 }
 
-
-#cage {
+#savedprincess {
   position: absolute;
   bottom: 95px;
-  height: 120px;
-  width: 69px;
-  background: url('img/53c98f365877f6f38fdcdeb3658ac2df.png') 0px 0px;
+  height: 105px;
+  width: 60px;
+  background: url('img/tumblr_7a922b7e02b6db9655fb212fc2a26b96_f5be641b_6401.png') 0px 0px;
 }
+/* #cage {
+  position: absolute;
+  bottom: 45px;
+  height: 200px;
+  width: 196px;
+  background: url('img/53c98f365877f6f38fdcdeb3658ac2df.png') 0px 0px;
+} */
 
 
 #fire {
@@ -183,7 +189,18 @@
 #gameOver {
   position: absolute;
   left: 480px;
-  bottom: 400px;
+  bottom: 360px;
+  width: 450px;
+  height: 30px;
+  font-family: "Press Start 2P", cursive;
+  color: azure;
+  display: none;
+}
+
+#completed {
+  position: absolute;
+  left: 480px;
+  bottom: 360px;
   width: 450px;
   height: 30px;
   font-family: "Press Start 2P", cursive;
@@ -224,6 +241,9 @@
   color: azure;
 }
 
+
+
+
 #game {
   width: 1300px;
   height: 700px;
@@ -242,6 +262,16 @@
   display: block;
   background: url("img/pngwing.com.png") 0px 0px;
 }
+
+#endCredit {
+  width: 1300px;
+  height: 700px;
+  position: relative;
+  bottom: 700px;
+  display: none;
+  background: url("img/finish-super-mario-wallpaper-wallpaper-0sxanxkxzvo8u54s.jpg") 0px 0px;
+}
+
 
 .container {
   overflow: hidden;
