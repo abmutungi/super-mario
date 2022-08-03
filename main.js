@@ -758,7 +758,8 @@ const bowserCollisionCheck = () => {
                 mario.getBoundingClientRect().right &&
             bowser.getBoundingClientRect().left >
                 mario.getBoundingClientRect().left &&
-            bowser.getBoundingClientRect().bottom >= 614
+            bowser.getBoundingClientRect().bottom >= 614 &&
+            !gameObject.onPlatform && !gameObject.onPrize
         ) {
             console.log("Bowser Hit");
             return true;
@@ -863,13 +864,13 @@ const bowserHit = () => {
                 mario.getBoundingClientRect().right >=
                     bowser.getBoundingClientRect().left &&
                 mario.getBoundingClientRect().bottom >=
-                    bowser.getBoundingClientRect().top - 5) ||
+                    bowser.getBoundingClientRect().top - 5 && !gameObject.onPlatform && !gameObject.onPrize) ||
             (mario.getBoundingClientRect().left <=
                 bowser.getBoundingClientRect().right &&
                 mario.getBoundingClientRect().right >=
                     bowser.getBoundingClientRect().right &&
                 mario.getBoundingClientRect().bottom >=
-                    bowser.getBoundingClientRect().top - 5)
+                    bowser.getBoundingClientRect().top - 5 && !gameObject.onPlatform && !gameObject.onPrize)
         ) {
             console.log("Bowser Hit", bowserCounter);
             return true;
@@ -1032,8 +1033,11 @@ const control = (e) => {
         rightFacing = true;
         gameObject.right = true;
     } else if (e.key === "p" || e.key === "P") {
-        gameObject.pause = true;
-        pauseSound.play();
+        if (gameObject.gameRunning){
+
+            gameObject.pause = true;
+            pauseSound.play();
+        }
     } else if (e.key === "c" || e.key === "C") {
         if (gameObject.pause) {
             game.lastChild.remove();
