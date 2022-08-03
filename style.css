@@ -205,7 +205,7 @@
   height: 30px;
   font-family: "Press Start 2P", cursive;
   color: azure;
-  display: none;
+  display: block;
 }
 
 #pauseMenu {

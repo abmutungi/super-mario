@@ -135,7 +135,9 @@ const endMessage = () => {
 const compMessage = () => {
     completed = document.createElement("div");
     completed.id = "completed";
-    completed.textContent = `Thank you Mario! The Kingdom is saved! Now try a more difficult quest...`;
+    completed.textContent = `Thank you Mario! The Kingdom is saved! \r\n\r\n FINAL SCORE: ${
+        currTime + currScore
+    }`;
     game.appendChild(completed);
 };
 
@@ -1028,8 +1030,8 @@ const control = (e) => {
             gameObject.pause = false;
             paused = false;
         }
-    } else if (e.key === "r" || e.key === "R") { 
-         if (gameObject.pause) {
+    } else if (e.key === "r" || e.key === "R") {
+        if (gameObject.pause) {
             location.reload();
         }
     } else if (e.key === "f" || e.key === "F") {
@@ -1040,16 +1042,16 @@ const control = (e) => {
             console.log("marioFireCounter => ", marioFireCounter);
         }
     } else if (e.key === "Enter") {
-        if(!gameObject.gameRunning){
-        requestAnimationFrame(gameLoop);
-        gameObject.gameRunning = true;
-        if (gameObject.start) {
-            startM.remove();
-            startMenu.remove();
+        if (!gameObject.gameRunning) {
+            requestAnimationFrame(gameLoop);
+            gameObject.gameRunning = true;
+            if (gameObject.start) {
+                startM.remove();
+                startMenu.remove();
 
-            gameObject.start = false;
+                gameObject.start = false;
+            }
         }
-    }
     } else if (e.key === "s" || e.key === "S") {
         if (gameObject.endGame) {
             location.reload();
@@ -1130,7 +1132,7 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
         //bowserFireCounter++
 
-        if (currScore > 50 && !gameObject.bowserExists) {
+        if (currScore > 5 && !gameObject.bowserExists) {
             createBowser();
             createBowserFire();
 
