@@ -60,6 +60,7 @@ let rightFacing = false;
 let paused = false;
 let randomPrizePicker = 0;
 let moveCounter = 0;
+let playAgain;
 
 let coinSound = new Audio("sounds/Mario Coin Sound.mp3");
 let marioDies = new Audio("sounds/Mario Death - Sound Effect.mp3");
@@ -117,6 +118,13 @@ const compMessage = () => {
     completed.textContent = `Thank you Mario! The Kingdom is saved!`;
     game.appendChild(completed);
 };
+
+const endGameReplay = () => {
+    playAgain = document.createElement("div");
+    playAgain.id = "endGameReplay";
+    playAgain.textContent = `PRESS S TO PLAY AGAIN!`;
+    game.appendChild(playAgain);
+}
 
 const showScore = () => {
     score = document.createElement("div");
@@ -1058,9 +1066,9 @@ const prizeGenerator = () => {
 
     if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 1; //3
     if (randomPrizePicker < 1) createCoin();
-    // if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
-    // if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
-    if (randomPrizePicker >= 1) createBlueShell(); //3
+    if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
+    if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
+    if (randomPrizePicker >= 3) createBlueShell(); //3
 
     console.log("randomPrizePicker => ", randomPrizePicker);
     console.log("coin check => ", gameObject.coinExists);
@@ -1116,7 +1124,7 @@ const gameLoop = (timestamp) => {
         prizeCounter++;
     
 
-        if (currScore > 5 && !gameObject.bowserExists) {
+        if (currScore >= 50 && !gameObject.bowserExists) {
             createBowser();
             createBowserFire();
 
@@ -1239,6 +1247,8 @@ const gameLoop = (timestamp) => {
         endCredit.style.display = "block";
         compMessage();
         showFinalScore();
+        endGameReplay();
+        gameObject.endGame = true;
         //location.reload();
     } else if (currTime === 0) {
         gameObject.endGame = true;

@@ -208,6 +208,16 @@
   display: block;
 }
 
+#endGameReplay {
+  position: absolute;
+  left: 300px;
+  bottom: 600px;
+  width: 200px;
+  font-family: "Press Start 2P", cursive;
+  color: rgb(6, 6, 5);
+  display: block;
+}
+
 #pauseMenu {
   position: relative;
   left: 250px;
