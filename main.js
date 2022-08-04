@@ -1062,9 +1062,9 @@ document.addEventListener("keyup", function (e) {
 });
 
 const prizeGenerator = () => {
-    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 2; //4
+    if (!gameObject.marioCanShoot) randomPrizePicker = Math.random() * 4; //4
 
-    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 1; //3
+    if (gameObject.marioCanShoot) randomPrizePicker = Math.random() * 3; //3
     if (randomPrizePicker < 1) createCoin();
     if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
     if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
