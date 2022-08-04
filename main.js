@@ -208,6 +208,12 @@ const moveLeft = () => {
     ) {
         mario.style.left += 50 + "px";
     }
+    if (bowserHit()) {
+        currLives -= 1;
+        currScore -= 10;
+        lives.textContent = `LIVES: ${currLives}`;
+        score.textContent = `SCORE:${currScore}`;
+    }
 
     if (
         gameObject.onPlatform &&
@@ -469,6 +475,7 @@ const marioBreatheFire = () => {
             bowserStrength -= 20;
             console.log("bowserStrength ==> ", bowserStrength);
             if (bowserStrength === 0) {
+                console.log(bowserStrength);
                 bowser.remove();
                 fireBall.remove();
                 gameObject.bowserShooting = false;
@@ -696,7 +703,7 @@ const goombaCollisionCheck = () => {
                 mario.getBoundingClientRect().right &&
             goomba.getBoundingClientRect().left >
                 mario.getBoundingClientRect().left &&
-            mario.getBoundingClientRect().bottom >= 614
+            mario.getBoundingClientRect().bottom >= 613
         ) {
             console.log("HIT");
             return true;
@@ -712,7 +719,7 @@ const bowserCollisionCheck = () => {
                 mario.getBoundingClientRect().right &&
             bowser.getBoundingClientRect().left >
                 mario.getBoundingClientRect().left &&
-            bowser.getBoundingClientRect().bottom >= 614 &&
+            bowser.getBoundingClientRect().bottom >= 613 &&
             !gameObject.onPlatform &&
             !gameObject.onPrize
         ) {
@@ -922,7 +929,7 @@ const princessSavedCheck = () => {
                 mario.getBoundingClientRect().right &&
             princess.getBoundingClientRect().left >
                 mario.getBoundingClientRect().left &&
-            mario.getBoundingClientRect().bottom >= 614
+            mario.getBoundingClientRect().bottom >= 613
         ) {
             console.log("SAVED PRINCESS!!!!");
             return true;
