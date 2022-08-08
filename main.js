@@ -301,16 +301,10 @@ const moveup = (now) => {
     } else if (gameObject.onPlatform) {
         marioY = platform.getBoundingClientRect().top + 100;
 
-        console.log("----------------------------newPosition => ", newPosition);
         if (!time.start) time.start = now;
-        console.log("time.start=> ", time.start);
         time.elapsed = now - time.start;
-        console.log("time.elapsed => ", time.elapsed);
         progress = time.elapsed / time.total;
-        console.log("progress => ", progress);
         newPosition = progress * finalPosition;
-        console.log("marioY => ", marioY);
-        console.log("mario bottom => ", mario.style.bottom);
         mario.style.bottom = marioY + newPosition + "px";
         if (progress < 0.4) {
             if (!done) {
@@ -351,7 +345,6 @@ const movedown = (now) => {
     } else if (gameObject.onPlatform) {
         mario.style.bottom =
             platform.getBoundingClientRect().bottom - 70 + "px";
-        console.log(mario.getBoundingClientRect().bottom);
     } else if (gameObject.onPrize) {
         mario.style.bottom =
             prizePlatform.getBoundingClientRect().top + 300 + "px";
@@ -367,7 +360,6 @@ const createGoomba = () => {
     goomba.setAttribute("id", "goomba");
     goomba.style.left = 1200 + "px";
     goombaCounter = 0;
-    console.log("============== CREATING goomba =============");
     game.appendChild(goomba);
     gameObject.goombaExists = true;
 };
@@ -383,7 +375,6 @@ const createBowser = () => {
         bowser = document.createElement("div");
         bowser.setAttribute("id", "bowser");
         bowser.style.left = 950 + "px";
-        console.log("============== CREATING BOWSER =============");
         game.appendChild(bowser);
         gameObject.bowserExists = true;
     }
@@ -393,7 +384,6 @@ const createBowserFire = () => {
     fireBall = document.createElement("div");
     fireBall.setAttribute("id", "fire");
     fireBall.style.left = 940 + "px";
-    console.log("============== BOWSER SHOOTS FIRE =============");
     game.appendChild(fireBall);
 };
 
@@ -478,9 +468,7 @@ const marioBreatheFire = () => {
             gameObject.marioShooting = false;
 
             bowserStrength -= 20;
-            console.log("bowserStrength ==> ", bowserStrength);
             if (bowserStrength === 0) {
-                console.log(bowserStrength);
                 bowser.remove();
                 fireBall.remove();
                 gameObject.bowserShooting = false;
@@ -513,7 +501,6 @@ const marioBreatheFire = () => {
 const createPrincess = () => {
     princess = document.createElement("div");
     princess.setAttribute("id", "princess");
-    console.log("creating princess ===> ");
     princess.style.left = 1100 + "px";
     game.appendChild(princess);
     gameObject.princessExists = true;
@@ -708,7 +695,6 @@ const goombaCollisionCheck = () => {
                 mario.getBoundingClientRect().left &&
             mario.getBoundingClientRect().bottom >= 613
         ) {
-            console.log("HIT");
             return true;
         }
     }
@@ -726,7 +712,6 @@ const bowserCollisionCheck = () => {
             !gameObject.onPlatform &&
             !gameObject.onPrize
         ) {
-            console.log("Bowser Hit");
             return true;
         }
     }
@@ -741,7 +726,6 @@ const flyingBulletCollisionCheck = () => {
                 mario.getBoundingClientRect().left &&
             gameObject.onPrize
         ) {
-            console.log("HIT");
             return true;
         }
     }
@@ -764,7 +748,6 @@ const goombaKill = () => {
                     goomba.getBoundingClientRect().top - 5)
         ) {
             goombaBump.play();
-            console.log("GOOMBA KILL");
             return true;
         }
         return false;
@@ -780,7 +763,6 @@ const fireCollisionCheck = () => {
                 mario.getBoundingClientRect().left &&
             mario.getBoundingClientRect().bottom >= 614
         ) {
-            console.log("mario flamesed");
             return true;
         }
     }
@@ -797,7 +779,6 @@ const goombaFireCollisionCheck = () => {
             marioShell.getBoundingClientRect().bottom >
                 goomba.getBoundingClientRect().top
         ) {
-            console.log("goomba flamesed");
             return true;
         }
         return false;
@@ -814,7 +795,6 @@ const bowserFireCollisionCheck = () => {
             marioShell.getBoundingClientRect().bottom >
                 bowser.getBoundingClientRect().top
         ) {
-            console.log("bowser flamesed");
             return true;
         }
         return false;
@@ -841,7 +821,6 @@ const bowserHit = () => {
                 !gameObject.onPlatform &&
                 !gameObject.onPrize)
         ) {
-            console.log("Bowser Hit");
             return true;
         }
         return false;
@@ -889,12 +868,9 @@ const redMushroomCollect = () => {
             redMushroom.remove();
             mushroomSound.play();
             prizeCounter = 0;
-            console.log(mario.classList);
             if (mario.classList.length === 1) {
                 mario.classList.toggle("normal");
             }
-            console.log(mario.classList);
-
             gameObject.redMushroomExists = false;
         }
     }
@@ -934,7 +910,6 @@ const princessSavedCheck = () => {
                 mario.getBoundingClientRect().left &&
             mario.getBoundingClientRect().bottom >= 613
         ) {
-            console.log("SAVED PRINCESS!!!!");
             return true;
         }
     }
@@ -977,7 +952,6 @@ const platformInlineCheck = () => {
             platform.getBoundingClientRect().right >
                 prizePlatform.getBoundingClientRect().right)
     ) {
-        console.log("platforms are in line");
         return true;
     }
     return false;
@@ -1019,8 +993,6 @@ const control = (e) => {
         if (gameObject.marioCanShoot && !gameObject.marioShooting) {
             gameObject.marioShooting = true;
             marioShellCounter--;
-
-            console.log("marioShellCounter => ", marioShellCounter);
         }
     } else if (e.key === "Enter") {
         if (!gameObject.gameRunning) {
@@ -1064,12 +1036,6 @@ const prizeGenerator = () => {
     if (randomPrizePicker >= 1 && randomPrizePicker < 2) createGreenMushroom();
     if (randomPrizePicker >= 2 && randomPrizePicker < 3) createRedMushroom();
     if (randomPrizePicker >= 3) createBlueShell(); //3
-
-    console.log("randomPrizePicker => ", randomPrizePicker);
-    console.log("coin check => ", gameObject.coinExists);
-    console.log("green mush check => ", gameObject.greenMushroomExists);
-    console.log("red mush check => ", gameObject.redMushroomExists);
-    console.log("blue shell check => ", gameObject.blueShellExists);
     prizeAppears.play();
 };
 
@@ -1083,8 +1049,6 @@ const onplatformCheck = () => {
             platform.getBoundingClientRect().top
     ) {
         gameObject.onPlatform = true;
-
-        console.log("HE'S ON THE PLATFORM");
         return true;
     }
     return false;
@@ -1100,8 +1064,6 @@ const onprizeCheck = () => {
             prizePlatform.getBoundingClientRect().top
     ) {
         gameObject.onPrize = true;
-
-        console.log("HE'S ON THE PRIZE PLATFORM");
         return true;
     }
     return false;
