@@ -124,7 +124,7 @@ const endGameReplay = () => {
     playAgain.id = "endGameReplay";
     playAgain.textContent = `PRESS S TO PLAY AGAIN!`;
     game.appendChild(playAgain);
-}
+};
 
 const showScore = () => {
     score = document.createElement("div");
@@ -281,7 +281,6 @@ let gameObject = {
 
 const moveup = (now) => {
     if (gameObject.jump && !gameObject.onPlatform && !gameObject.onPrize) {
-
         if (!time.start) time.start = now;
         time.elapsed = now - time.start;
         progress = time.elapsed / time.total;
@@ -345,7 +344,6 @@ const movedown = (now) => {
             if (gameObject.onPlatform) {
                 mario.style.bottom =
                     platform.getBoundingClientRect().bottom - 70 + "px";
-            
             }
             time.start = null;
         }
@@ -447,7 +445,6 @@ const breatheFire = () => {
             fireBall.remove();
             createBowserFire();
             gameObject.bowserShooting = false;
-
         }
     }
 };
@@ -543,7 +540,6 @@ const createPlatform = () => {
     platformCounter = 0;
     game.appendChild(platform);
     gameObject.platformExists = true;
-   
 };
 
 const movePlatform = () => {
@@ -560,7 +556,6 @@ const movePlatform = () => {
         platform.remove();
         gameObject.platformExists = false;
     }
-
 };
 const createPrizePlatform = () => {
     prizePlatform = document.createElement("div");
@@ -899,7 +894,7 @@ const redMushroomCollect = () => {
                 mario.classList.toggle("normal");
             }
             console.log(mario.classList);
-       
+
             gameObject.redMushroomExists = false;
         }
     }
@@ -1122,14 +1117,12 @@ const gameLoop = (timestamp) => {
         goombaCounter++;
         platformCounter++;
         prizeCounter++;
-    
 
         if (currScore >= 50 && !gameObject.bowserExists) {
             createBowser();
             createBowserFire();
 
             createPrincess();
-    
         }
 
         if (gameObject.bowserExists) {
@@ -1242,6 +1235,9 @@ const gameLoop = (timestamp) => {
     if (currTime > 0 && currLives > 0 && !princessSavedCheck()) {
         requestAnimationFrame(gameLoop);
     } else if (princessSavedCheck()) {
+        bowserMusic.volume = 0;
+        themeTune.volume = 0.5;
+        themeTune.play();
         princess.remove();
         createSavedPrincess();
         endCredit.style.display = "block";
